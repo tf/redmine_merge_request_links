@@ -1,0 +1,8 @@
+#!/bin/bash
+
+docker run \
+       -v $PWD:/usr/src/redmine/plugins/redmine_merge_request_links \
+       -e RAILS_ENV=test \
+       --rm \
+       redmine_test \
+       rake db:migrate redmine:plugins:migrate redmine:plugins:test
