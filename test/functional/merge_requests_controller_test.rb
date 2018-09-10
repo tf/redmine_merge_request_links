@@ -36,6 +36,21 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert_equal 'New title', merge_request.title
   end
 
+  def test_github_pull_request_event_creates_merge_request
+    request.headers['X-Github-Event'] = 'pull_request'
+    url = 'https://github.com/Codertocat/Hello-World/pull/1'
+    post(:event, pull_request: {
+           html_url: url,
+           title: 'Some pull request',
+           state: 'closed'
+         })
+
+    merge_request = MergeRequest.where(url: url).first
+    assert merge_request.present?
+    assert_equal 'closed', merge_request.state
+    assert_equal 'Some pull request', merge_request.title
+  end
+
   def test_responds_with_bad_request_if_unknown_event
     post(:event)
 

@@ -1,8 +1,7 @@
 class MergeRequestsController < ApplicationController
   def event
-    unless event_handler.matches?(request)
-      return head :bad_request
-    end
+    event_handler = find_event_handler
+    return head :bad_request unless event_handler
 
     attributes = event_handler.parse_params(params)
 
@@ -15,7 +14,12 @@ class MergeRequestsController < ApplicationController
 
   private
 
-  def event_handler
-    RedmineMergeRequestLinks::EventHandlers::Gitlab.new
+  def find_event_handler
+    [
+      RedmineMergeRequestLinks::EventHandlers::Github.new,
+      RedmineMergeRequestLinks::EventHandlers::Gitlab.new
+    ].detect do |event_handler|
+      event_handler.matches?(request)
+    end
   end
 end
