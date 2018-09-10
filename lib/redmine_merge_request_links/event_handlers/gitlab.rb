@@ -14,7 +14,9 @@ module RedmineMergeRequestLinks
       end
 
       def parse_params(params)
-        params.require(:object_attributes).permit(:state, :url, :title)
+        params
+          .require(:object_attributes)
+          .permit(:state, :url, :title, :description)
       end
     end
   end

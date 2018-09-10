@@ -25,7 +25,7 @@ module RedmineMergeRequestLinks
       def parse_params(params)
         params
           .require(:pull_request)
-          .permit(:state, :html_url, :title).tap do |attributes|
+          .permit(:state, :html_url, :title, :description).tap do |attributes|
 
           attributes[:url] = attributes.delete(:html_url)
         end

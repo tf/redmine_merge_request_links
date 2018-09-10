@@ -1,12 +1,15 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class MergeRequestsControllerTest < ActionController::TestCase
+  TOKEN = 'secret'
   MERGE_REQUEST_URL = 'https://gitlab.example.com/project/merge_requests/1'
+
+  fixtures :issues
 
   def setup
     RedmineMergeRequestLinks.event_handlers = [
-      RedmineMergeRequestLinks::EventHandlers::Github.new(token: 'secret'),
-      RedmineMergeRequestLinks::EventHandlers::Gitlab.new(token: 'secret')
+      RedmineMergeRequestLinks::EventHandlers::Github.new(token: TOKEN),
+      RedmineMergeRequestLinks::EventHandlers::Gitlab.new(token: TOKEN)
     ]
   end
 
@@ -61,17 +64,35 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert_response :forbidden
   end
 
+  def test_associates_issues_mentioned_in_gitlab_mr_description
+    issue = Issue.first
+
+    request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
+    request.headers['X-Gitlab-Token'] = 'secret'
+    post(:event, object_attributes: {
+           url: MERGE_REQUEST_URL,
+           title: 'Some merge request',
+           state: 'opened',
+           description: "This mentions ##{issue.id}"
+         })
+
+    merge_request = MergeRequest.where(url: MERGE_REQUEST_URL).first
+    assert_includes(merge_request.issues, issue)
+  end
+
   def test_github_pull_request_event_creates_merge_request
     url = 'https://github.com/Codertocat/Hello-World/pull/1'
 
+    payload = {
+      pull_request: {
+        html_url: url,
+        title: 'Some pull request',
+        state: 'closed'
+      }
+    }
     request.headers['X-GitHub-Event'] = 'pull_request'
-    request.headers['X-Hub-Signature'] =
-      'sha1=44dcfa66ad9fc8d6e78c921e63b02e375379e4b1'
-    post(:event, pull_request: {
-           html_url: url,
-           title: 'Some pull request',
-           state: 'closed'
-         })
+    request.headers['X-Hub-Signature'] = hub_signature(payload)
+    post(:event, payload)
 
     assert_response :success
 
@@ -93,9 +114,37 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert_response :forbidden
   end
 
+  def test_associates_issues_mentioned_in_github_pr_description
+    url = 'https://github.com/Codertocat/Hello-World/pull/1'
+    issue = Issue.last
+
+    payload = {
+      pull_request: {
+        html_url: url,
+        title: 'Some pull request',
+        state: 'closed',
+        description: "Talks about ##{issue.id}"
+      }
+    }
+    request.headers['X-GitHub-Event'] = 'pull_request'
+    request.headers['X-Hub-Signature'] = hub_signature(payload)
+    post(:event, payload)
+
+    merge_request = MergeRequest.where(url: url).first
+    assert_includes(merge_request.issues, issue)
+  end
+
   def test_responds_with_bad_request_if_unknown_event
     post(:event)
 
     assert_response :bad_request
+  end
+
+  private
+
+  def hub_signature(payload)
+    'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'),
+                                      TOKEN,
+                                      payload.to_query)
   end
 end
