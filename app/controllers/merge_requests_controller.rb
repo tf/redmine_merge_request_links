@@ -2,6 +2,7 @@ class MergeRequestsController < ApplicationController
   def event
     event_handler = find_event_handler
     return head :bad_request unless event_handler
+    return head :forbidden unless event_handler.verify(request)
 
     attributes = event_handler.parse_params(params)
 
@@ -9,16 +10,13 @@ class MergeRequestsController < ApplicationController
       MergeRequest.find_or_initialize_by(url: attributes[:url])
     merge_request.update!(attributes)
 
-    head :success
+    head :ok
   end
 
   private
 
   def find_event_handler
-    [
-      RedmineMergeRequestLinks::EventHandlers::Github.new,
-      RedmineMergeRequestLinks::EventHandlers::Gitlab.new
-    ].detect do |event_handler|
+    RedmineMergeRequestLinks.event_handlers.detect do |event_handler|
       event_handler.matches?(request)
     end
   end

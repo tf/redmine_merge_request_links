@@ -10,3 +10,5 @@ Redmine::Plugin.register :redmine_merge_request_links do
 
   requires_redmine version_or_higher: '3.0'
 end
+
+require 'redmine_merge_request_links'
