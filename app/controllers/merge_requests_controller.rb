@@ -1,10 +1,10 @@
 class MergeRequestsController < ApplicationController
   def event
-    if request.headers['X-Gitlab-Event'] != 'Merge Request Hook'
+    unless event_handler.matches?(request)
       return head :bad_request
     end
 
-    attributes = object_params
+    attributes = event_handler.parse_params(params)
 
     merge_request =
       MergeRequest.find_or_initialize_by(url: attributes[:url])
@@ -15,7 +15,7 @@ class MergeRequestsController < ApplicationController
 
   private
 
-  def object_params
-    params.require(:object_attributes).permit(:state, :url, :title)
+  def event_handler
+    RedmineMergeRequestLinks::EventHandlers::Gitlab.new
   end
 end
