@@ -5,6 +5,10 @@ class MergeRequest < ActiveRecord::Base
 
   after_save :scan_description_for_issue_ids
 
+  def self.find_all_by_issue(issue)
+    includes(:issues).where(issues: { id: issue.id })
+  end
+
   private
 
   ISSUE_ID_REGEXP = /[^a-z]#(\d+)/

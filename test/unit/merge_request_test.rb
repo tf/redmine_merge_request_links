@@ -48,4 +48,14 @@ class MergeRequestTest < ActiveSupport::TestCase
 
     assert_includes(merge_request.issues, issue)
   end
+
+  def test_find_all_by_issue
+    issue = Issue.last
+    merge_request = MergeRequest.create!
+    merge_request.issues << issue
+    other_merge_request = MergeRequest.create!
+
+    assert_includes(MergeRequest.find_all_by_issue(issue), merge_request)
+    refute_includes(MergeRequest.find_all_by_issue(issue), other_merge_request)
+  end
 end

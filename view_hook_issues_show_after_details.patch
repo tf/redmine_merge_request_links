@@ -1,0 +1,13 @@
+diff --git a/app/views/issues/show.html.erb b/app/views/issues/show.html.erb
+index 97a2448..d805b6c 100644
+--- a/app/views/issues/show.html.erb
++++ b/app/views/issues/show.html.erb
+@@ -118,6 +118,8 @@ end %>
+ 
+ </div>
+ 
++<%= call_hook(:view_issues_show_after_details, :issue => @issue) %>
++
+ <% if @changesets.present? %>
+ <div id="issue-changesets">
+ <h3><%=l(:label_associated_revisions)%></h3>
