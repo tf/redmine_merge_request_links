@@ -23,6 +23,7 @@ module RedmineMergeRequestLinks
           .tap do |attributes|
             target = attributes.delete(:target) || {}
 
+            attributes[:provider] = 'gitlab'
             attributes[:display_id] =
               "#{target[:path_with_namespace]}!#{attributes.delete(:iid)}"
 

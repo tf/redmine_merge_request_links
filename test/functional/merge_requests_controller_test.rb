@@ -38,6 +38,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert_equal 'Some merge request', merge_request.title
     assert_equal 'group/project!23', merge_request.display_id
     assert_equal '@john', merge_request.author_name
+    assert_equal 'gitlab', merge_request.provider
   end
 
   def test_gitlab_merge_request_event_updates_merge_request
@@ -173,6 +174,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert_equal 'Some pull request', merge_request.title
     assert_equal 'group/project#12', merge_request.display_id
     assert_equal '@someuser', merge_request.author_name
+    assert_equal 'github', merge_request.provider
   end
 
   def test_responds_with_forbidden_if_github_signature_is_incorrect

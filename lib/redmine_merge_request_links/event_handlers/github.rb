@@ -33,6 +33,7 @@ module RedmineMergeRequestLinks
           base = attributes.delete(:base) || {}
           repo = base.fetch(:repo, {})
 
+          attributes[:provider] = 'github'
           attributes[:url] = attributes.delete(:html_url)
           attributes[:description] = attributes.delete(:body)
           attributes[:author_name] = "@#{user[:login]}"
