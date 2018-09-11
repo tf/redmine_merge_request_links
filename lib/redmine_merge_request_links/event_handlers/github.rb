@@ -35,7 +35,7 @@ module RedmineMergeRequestLinks
 
           attributes[:url] = attributes.delete(:html_url)
           attributes[:description] = attributes.delete(:body)
-          attributes[:author_name] = user[:login]
+          attributes[:author_name] = "@#{user[:login]}"
 
           attributes[:display_id] =
             "#{repo[:full_name]}##{attributes.delete(:number)}"
