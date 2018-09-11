@@ -9,6 +9,16 @@ div#issue-merge-requests {
   padding-left: 1em;
 }
 
+@media screen and (max-width: 899px) {
+  div#issue-merge-requests {
+    float: none;
+    width: auto;
+    margin-left: 0;
+    padding-left: 0;
+    margin-bottom: 2em;
+  }
+}
+
 .merge-request {
   padding: 5px 0 5px 30px;
   border-top: solid 1px #ddd;
