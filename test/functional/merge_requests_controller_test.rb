@@ -16,10 +16,18 @@ class MergeRequestsControllerTest < ActionController::TestCase
   def test_gitlab_merge_request_event_creates_merge_request
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
-    post(:event, object_attributes: {
+    post(:event,
+         user: {
+           name: 'John'
+         },
+         object_attributes: {
            url: MERGE_REQUEST_URL,
            title: 'Some merge request',
-           state: 'opened'
+           state: 'opened',
+           iid: 23,
+           target: {
+             path_with_namespace: 'group/project'
+           }
          })
 
     assert_response :success
@@ -28,6 +36,8 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert merge_request.present?
     assert_equal 'opened', merge_request.state
     assert_equal 'Some merge request', merge_request.title
+    assert_equal 'group/project!23', merge_request.display_id
+    assert_equal 'John', merge_request.author_name
   end
 
   def test_gitlab_merge_request_event_updates_merge_request
@@ -39,10 +49,18 @@ class MergeRequestsControllerTest < ActionController::TestCase
 
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
-    post(:event, object_attributes: {
+    post(:event,
+         user: {
+           name: 'John'
+         },
+         object_attributes: {
            url: MERGE_REQUEST_URL,
            title: 'New title',
-           state: 'merged'
+           state: 'merged',
+           iid: 23,
+           target: {
+             path_with_namespace: 'group/project'
+           }
          })
 
     assert_response :success
@@ -55,10 +73,18 @@ class MergeRequestsControllerTest < ActionController::TestCase
   def test_responds_with_forbidden_if_gitlab_token_does_not_match
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'wrong'
-    post(:event, object_attributes: {
+    post(:event,
+         user: {
+           name: 'John'
+         },
+         object_attributes: {
            url: MERGE_REQUEST_URL,
            title: 'Some merge request',
-           state: 'opened'
+           state: 'opened',
+           iid: 23,
+           target: {
+             path_with_namespace: 'group/project'
+           }
          })
 
     assert_response :forbidden
@@ -69,11 +95,19 @@ class MergeRequestsControllerTest < ActionController::TestCase
 
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
-    post(:event, object_attributes: {
+    post(:event,
+         user: {
+           name: 'John'
+         },
+         object_attributes: {
            url: MERGE_REQUEST_URL,
            title: 'Some merge request',
            state: 'opened',
-           description: "This mentions ##{issue.id}"
+           description: "This mentions ##{issue.id}",
+           iid: 23,
+           target: {
+             path_with_namespace: 'group/project'
+           }
          })
 
     merge_request = MergeRequest.where(url: MERGE_REQUEST_URL).first
@@ -87,7 +121,16 @@ class MergeRequestsControllerTest < ActionController::TestCase
       pull_request: {
         html_url: url,
         title: 'Some pull request',
-        state: 'closed'
+        state: 'closed',
+        number: 12,
+        user: {
+          login: 'someuser'
+        },
+        base: {
+          repo: {
+            full_name: 'group/project'
+          }
+        }
       }
     }
     request.headers['X-GitHub-Event'] = 'pull_request'
@@ -100,6 +143,8 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert merge_request.present?
     assert_equal 'closed', merge_request.state
     assert_equal 'Some pull request', merge_request.title
+    assert_equal 'group/project#12', merge_request.display_id
+    assert_equal 'someuser', merge_request.author_name
   end
 
   def test_responds_with_forbidden_if_github_signature_is_incorrect
@@ -108,13 +153,22 @@ class MergeRequestsControllerTest < ActionController::TestCase
     post(:event, pull_request: {
            html_url: 'https://github.com/Codertocat/Hello-World/pull/1',
            title: 'Some pull request',
-           state: 'closed'
+           state: 'closed',
+           number: 12,
+           user: {
+             login: 'someuser'
+           },
+           base: {
+             repo: {
+               full_name: 'group/project'
+             }
+           }
          })
 
     assert_response :forbidden
   end
 
-  def test_associates_issues_mentioned_in_github_pr_description
+  def test_associates_issues_mentioned_in_github_pr_body
     url = 'https://github.com/Codertocat/Hello-World/pull/1'
     issue = Issue.last
 
@@ -123,7 +177,16 @@ class MergeRequestsControllerTest < ActionController::TestCase
         html_url: url,
         title: 'Some pull request',
         state: 'closed',
-        description: "Talks about ##{issue.id}"
+        body: "Talks about ##{issue.id}",
+        number: 12,
+        user: {
+          login: 'someuser'
+        },
+        base: {
+          repo: {
+            full_name: 'group/project'
+          }
+        }
       }
     }
     request.headers['X-GitHub-Event'] = 'pull_request'
