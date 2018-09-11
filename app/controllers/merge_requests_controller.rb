@@ -1,4 +1,7 @@
 class MergeRequestsController < ApplicationController
+  skip_before_action :verify_authenticity_token
+  skip_before_action :check_if_login_required
+
   def event
     event_handler = find_event_handler
     return head :bad_request unless event_handler
