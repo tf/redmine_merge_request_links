@@ -1,12 +1,15 @@
-<%= content_tag(:div, id: "merge-request-#{merge_request.id}", class: 'merge-request') do %>
-  <%= content_tag(:span,
-                  merge_request.display_id,
-                  class: 'merge-request-id') %>
-  <%= link_to(merge_request.title, merge_request.url) %>
+<%= content_tag(:div, id: "merge-request-#{merge_request.id}", class: "merge-request merge-request-#{merge_request.provider}") do %>
   <%= content_tag(:span,
                   merge_request.state,
                   class: "merge-request-state merge-request-state-#{merge_request.state}") %>
   <%= content_tag(:span,
-                  merge_request.author_name,
-                  class: 'merge-request-author') %>
+                  merge_request.display_id,
+                  class: 'merge-request-id') %>
+  <%= link_to(merge_request.title, merge_request.url) %>
+  <span class="merge-request-by-line">
+    by
+    <%= content_tag(:span,
+                    merge_request.author_name,
+                    class: 'merge-request-author') %>
+  </span>
 <% end %>

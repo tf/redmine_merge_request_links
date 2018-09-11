@@ -1,6 +1,10 @@
+<% merge_requests = MergeRequest.find_all_by_issue(@issue) %>
+
+<% if merge_requests.present? %>
 <div id="issue-merge-requests">
   <h3>Associated Merge Requests</h3>
   <%= render(partial: 'hooks/redmine_merge_request_links/merge_request_link',
              collection: MergeRequest.find_all_by_issue(@issue),
              as: :merge_request) %>
 </div>
+<% end %>
