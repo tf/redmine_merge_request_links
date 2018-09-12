@@ -71,6 +71,42 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert_equal 'New title', merge_request.title
   end
 
+  def test_does_not_update_author_field
+    # Gitlab does not pass the author name, only the name of the user
+    # performing the current action. Since (except for merge requests
+    # that were created before the plugin was installed) the user
+    # triggering the first webhook event is the author, we want to
+    # update the author name only once.
+
+    merge_request = MergeRequest.create!(
+      url: MERGE_REQUEST_URL,
+      title: 'Title',
+      state: 'opened',
+      author_name: '@jack'
+    )
+
+    request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
+    request.headers['X-Gitlab-Token'] = 'secret'
+    post(:event,
+         user: {
+           username: 'john'
+         },
+         object_attributes: {
+           url: MERGE_REQUEST_URL,
+           title: 'Title',
+           state: 'merged',
+           iid: 23,
+           target: {
+             path_with_namespace: 'group/project'
+           }
+         })
+
+    assert_response :success
+
+    merge_request.reload
+    assert_equal '@jack', merge_request.author_name
+  end
+
   def test_gitlab_system_hooks
     request.headers['X-Gitlab-Event'] = 'System Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
