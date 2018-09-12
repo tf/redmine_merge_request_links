@@ -1,5 +1,7 @@
 # Redmine Merge Request Links
 
+[![Build Status](https://travis-ci.org/tf/redmine_merge_request_links.svg?branch=master)](https://travis-ci.org/tf/redmine_merge_request_links)
+
 Display links to associated Gitlab merge requests and GitHub pull
 requests on Redmine's issue page.
 
@@ -57,3 +59,26 @@ authenticate webhooks.
 * Check the "Pull requests" event.
 
 * Click "Add webhook".
+
+## Development
+
+After checking out the repository, run
+
+```
+$ bin/build
+```
+
+to build the Docker container used to run the test suite.
+
+Then run
+
+```
+$ bin/test
+```
+
+to run the test suite inside a Docker container.
+
+## License
+
+The gem is available as open source under the terms of the
+[MIT License](http://opensource.org/licenses/MIT).
