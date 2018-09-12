@@ -1,9 +1,11 @@
 module RedmineMergeRequestLinks
   class Hooks < Redmine::Hook::ViewListener
-    render_on(:view_layouts_base_html_head,
-              partial: 'hooks/redmine_merge_request_links/header')
+    def view_layouts_base_html_head(_context = {})
+      stylesheet_link_tag('redmine_merge_request_links.css',
+                          plugin: 'redmine_merge_request_links')
+    end
 
     render_on(:view_issues_show_after_details,
-              partial: 'hooks/redmine_merge_request_links/issue')
+              partial: 'merge_request_links/box')
   end
 end
