@@ -1,6 +1,6 @@
 FROM redmine:3.4.6
 
-COPY view_hook_issues_show_after_details.patch /
+COPY patches/view_hook_issues_show_after_details.patch /
 RUN git apply /view_hook_issues_show_after_details.patch
 
 RUN apt-get update \
