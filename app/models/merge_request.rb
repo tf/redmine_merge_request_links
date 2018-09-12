@@ -2,6 +2,7 @@ class MergeRequest < ActiveRecord::Base
   has_and_belongs_to_many :issues
 
   attr_accessor :description
+  attr_accessor :title
 
   # Gitlab does not pass the author name, only the name of the user
   # performing the current action. Since (except for merge requests
@@ -21,7 +22,7 @@ class MergeRequest < ActiveRecord::Base
   ISSUE_ID_REGEXP = /(?:[^a-z]|\A)#(\d+)/
 
   def scan_description_for_issue_ids
-    self.issues = (description || '').scan(ISSUE_ID_REGEXP).map do |match|
+    self.issues = (description || '' + title || '').scan(ISSUE_ID_REGEXP).map do |match|
       Issue.find_by_id(match[0])
     end.compact
   end
