@@ -47,7 +47,7 @@ authenticate webhooks.
 
 * Go to the webhook page of a project or organization.
 
-* Enter the URL `http://redmine.example.com/merge_requests/event`.
+* Enter the URL `https://redmine.example.com/merge_requests/event`.
 
 * Select `application/json` as content type.
 
