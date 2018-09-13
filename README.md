@@ -8,7 +8,11 @@ requests on Redmine's issue page.
 Intercepts webhooks and parses merge request descriptions for
 mentioned issue ids.
 
-## Install
+## Requirements
+
+* Redmine 3 (tested with 3.4.6)
+
+## Installation
 
 Copy plugin directoy to `{RAILS_APP}/plugins` on your Redmine path.
 
