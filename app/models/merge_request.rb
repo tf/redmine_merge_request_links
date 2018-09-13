@@ -21,8 +21,14 @@ class MergeRequest < ActiveRecord::Base
   ISSUE_ID_REGEXP = /(?:[^a-z]|\A)#(\d+)/
 
   def scan_description_for_issue_ids
-    self.issues = (description || '').scan(ISSUE_ID_REGEXP).map do |match|
+    self.issues = mentioned_issue_ids.map do |match|
       Issue.find_by_id(match[0])
     end.compact
+  end
+
+  def mentioned_issue_ids
+    [description, title].flat_map do |value|
+      (value || '').scan(ISSUE_ID_REGEXP)
+    end.uniq
   end
 end

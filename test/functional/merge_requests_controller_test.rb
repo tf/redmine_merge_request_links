@@ -179,6 +179,30 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert_includes(merge_request.issues, issue)
   end
 
+  def test_associates_issues_mentioned_in_gitlab_mr_title
+    issue = Issue.first
+
+    request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
+    request.headers['X-Gitlab-Token'] = 'secret'
+    post(:event,
+         user: {
+           username: 'john'
+         },
+         object_attributes: {
+           url: MERGE_REQUEST_URL,
+           title: "Some merge request (##{issue.id})",
+           state: 'opened',
+           description: 'Some text',
+           iid: 23,
+           target: {
+             path_with_namespace: 'group/project'
+           }
+         })
+
+    merge_request = MergeRequest.where(url: MERGE_REQUEST_URL).first
+    assert_includes(merge_request.issues, issue)
+  end
+
   def test_github_pull_request_event_creates_merge_request
     url = 'https://github.com/Codertocat/Hello-World/pull/1'
 
@@ -244,6 +268,35 @@ class MergeRequestsControllerTest < ActionController::TestCase
         title: 'Some pull request',
         state: 'closed',
         body: "Talks about ##{issue.id}",
+        number: 12,
+        user: {
+          login: 'someuser'
+        },
+        base: {
+          repo: {
+            full_name: 'group/project'
+          }
+        }
+      }
+    }
+    request.headers['X-GitHub-Event'] = 'pull_request'
+    request.headers['X-Hub-Signature'] = hub_signature(payload)
+    post(:event, payload)
+
+    merge_request = MergeRequest.where(url: url).first
+    assert_includes(merge_request.issues, issue)
+  end
+
+  def test_associates_issues_mentioned_in_github_pr_title
+    url = 'https://github.com/Codertocat/Hello-World/pull/1'
+    issue = Issue.last
+
+    payload = {
+      pull_request: {
+        html_url: url,
+        title: "Some pull request (##{issue.id})",
+        state: 'closed',
+        body: 'Some text',
         number: 12,
         user: {
           login: 'someuser'

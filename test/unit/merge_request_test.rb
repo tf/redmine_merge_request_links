@@ -12,6 +12,27 @@ class MergeRequestTest < ActiveSupport::TestCase
     assert_includes(merge_request.issues, issue)
   end
 
+  def test_updates_issues_from_title
+    issue = Issue.last
+    merge_request = MergeRequest.create!
+
+    merge_request.update!(title: "MR for ##{issue.id}")
+
+    assert_includes(merge_request.issues, issue)
+  end
+
+  def test_creates_one_association_even_if_mentioned_multiple_times
+    issue = Issue.last
+    merge_request = MergeRequest.create!
+
+    merge_request.update!(
+      title: "MR for ##{issue.id}",
+      description: "Mentions ##{issue.id} and again ##{issue.id}"
+    )
+
+    assert_equal(1, merge_request.issues.size)
+  end
+
   def test_removes_no_longer_mentioned_issues_on_update
     issue = Issue.last
     merge_request = MergeRequest.create!
