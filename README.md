@@ -64,6 +64,17 @@ authenticate webhooks.
 
 * Click "Add webhook".
 
+## Known Issues
+
+* Gitlab only passes the author id as part of the merge request
+  webhook not a display name. It does include the username of the user
+  whose action triggered the webhook, though. To prevent having to
+  fetch the author name in a separate REST API call, this username is
+  used as author name since the user triggering a merge request's
+  first webhook is usually the author. For merge request that were
+  created before the plugin was installed, this causes the first user
+  to edit the merge request to be recorded as the author.
+
 ## Development
 
 After checking out the repository, run
