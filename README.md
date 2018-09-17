@@ -2,15 +2,17 @@
 
 [![Build Status](https://travis-ci.org/tf/redmine_merge_request_links.svg?branch=master)](https://travis-ci.org/tf/redmine_merge_request_links)
 
-Display links to associated Gitlab merge requests and GitHub pull
+Display links to associated GitLab merge requests and GitHub pull
 requests on Redmine's issue page.
 
 Intercepts webhooks and parses merge request descriptions for
 mentioned issue ids.
 
+
 ## Requirements
 
 * Redmine 3 (tested with 3.4.6)
+
 
 ## Installation
 
@@ -23,25 +25,29 @@ applying a patch to your Redmine instance. From your Redmine path run:
 $ git apply plugins/redmine_merge_request_links/patches/view_hook_issues_show_after_details.patch
 ```
 
-The following environment variables need to be set:
+One of the following environment variables need to be set:
 
 * `REDMINE_MERGE_REQUEST_LINKS_GITLAB_WEBHOOK_TOKEN`
 * `REDMINE_MERGE_REQUEST_LINKS_GITHUB_WEBHOOK_TOKEN`
 
-They contain secrets which have to be configured in Gitlab/GitHub to
+They must contain secrets which have to be configured in GitLab/GitHub to
 authenticate webhooks.
+
 
 ## Usage
 
-### Gitlab
+Create a webhook in GitLab or GitHub as described here:
+
+### GitLab
 
 * Go to either the webhook page of a project (Settings > Integration)
   or the system hook page (Admin area > System Hooks).
 
-* Enter the URL `http://redmine.example.com/merge_requests/event`.
+* Enter the URL of your Redmine instance
+  `http://redmine.example.com/merge_requests/event`
 
-* Enter the secret token passed in
-  `REDMINE_MERGE_REQUEST_LINKS_GITLAB_WEBHOOK_TOKEN`.
+* Enter the secret token you defined in environment variable
+  `REDMINE_MERGE_REQUEST_LINKS_GITLAB_WEBHOOK_TOKEN`
 
 * Check the "Merge request events" trigger.
 
@@ -51,11 +57,12 @@ authenticate webhooks.
 
 * Go to the webhook page of a project or organization.
 
-* Enter the URL `https://redmine.example.com/merge_requests/event`.
+* Enter the URL of your Redmine instance
+  `https://redmine.example.com/merge_requests/event`.
 
 * Select `application/json` as content type.
 
-* Enter the secret passed in
+* Enter the secret token you defined in environment variable
   `REDMINE_MERGE_REQUEST_LINKS_GITHUB_WEBHOOK_TOKEN`.
 
 * Choose "Let me select individual events".
@@ -63,6 +70,18 @@ authenticate webhooks.
 * Check the "Pull requests" event.
 
 * Click "Add webhook".
+
+### Redmine server
+
+* Export the environment variable(s) in your bash or webserver config.
+  Examples with Phusion Passenger webserver can be found here:
+  https://www.phusionpassenger.com/library/indepth/environment_variables.html
+
+* Run plugin migrations from your redmine root directory
+  `rake redmine:plugins:migrate RAILS_ENV=production`
+
+* Restart your webserver
+
 
 ## Known Issues
 
@@ -74,6 +93,7 @@ authenticate webhooks.
   first webhook is usually the author. For merge request that were
   created before the plugin was installed, this causes the first user
   to edit the merge request to be recorded as the author.
+
 
 ## Development
 
