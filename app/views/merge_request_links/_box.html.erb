@@ -1,10 +1,12 @@
-<% merge_requests = MergeRequest.find_all_by_issue(@issue) %>
+<% if User.current.allowed_to?(:browse_repository, @project) %>
+  <% merge_requests = MergeRequest.find_all_by_issue(@issue) %>
 
-<% if merge_requests.present? %>
-<div id="issue-merge-requests">
-  <h3><%= l(:mrl_label_associated_merge_requests) %></h3>
-  <%= render(partial: 'merge_request_links/merge_request_link',
-             collection: MergeRequest.find_all_by_issue(@issue),
-             as: :merge_request) %>
-</div>
+  <% if merge_requests.present? %>
+  <div id="issue-merge-requests">
+    <h3><%= l(:mrl_label_associated_merge_requests) %></h3>
+    <%= render(partial: 'merge_request_links/merge_request_link',
+               collection: MergeRequest.find_all_by_issue(@issue),
+               as: :merge_request) %>
+  </div>
+  <% end %>
 <% end %>
