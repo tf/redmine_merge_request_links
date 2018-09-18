@@ -2,6 +2,11 @@
 
 ## Changes on `master`
 
+- Require `browse_repository` permission to be able to see associated
+  merge requests on issue page.
+
+- Add German view translations.
+
 - Also parse the pull request title.
 
 - Do not associate issues multiple times that are mentioned more than
