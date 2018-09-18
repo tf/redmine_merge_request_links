@@ -25,12 +25,9 @@ class IssuesControllerTest < ActionController::TestCase
            :journal_details,
            :queries
 
-  def setup
-    @request.session[:user_id] = 1
-  end
-
   def test_renders_issue_merge_requests
-    issue = Issue.find(1)
+    @request.session[:user_id] = developer_user.id
+
     merge_request = MergeRequest.create!(title: 'Some merge request')
     merge_request.issues << issue
 
@@ -38,5 +35,37 @@ class IssuesControllerTest < ActionController::TestCase
 
     assert_response :success
     assert_select "#merge-request-#{merge_request.id}"
+  end
+
+  def test_requires_browse_repository_permission
+    @request.session[:user_id] = user_without_browse_repository_permission.id
+
+    merge_request = MergeRequest.create!(title: 'Some merge request')
+    merge_request.issues << issue
+
+    get(:show, id: issue.id)
+
+    assert_response :success
+    assert_select "#merge-request-#{merge_request.id}", count: 0
+  end
+
+  private
+
+  def developer_user
+    User.find(3)
+  end
+
+  def user_without_browse_repository_permission
+    developer_user.tap do |user|
+      member = Member.where(user: user, project_id: issue.project_id).first
+
+      role = member.roles.first
+      role.permissions.delete(:browse_repository)
+      role.save!
+    end
+  end
+
+  def issue
+    @issue ||= Issue.find(1)
   end
 end
