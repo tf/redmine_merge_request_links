@@ -16,7 +16,12 @@ mentioned issue ids.
 
 ## Installation
 
-Copy plugin directoy to `{RAILS_APP}/plugins` on your Redmine path.
+Copy plugin directoy to `{RAILS_APP}/plugins` on your Redmine
+path. Run plugin migrations from your redmine root directory:
+
+```bash
+$ rake redmine:plugins:migrate RAILS_ENV=production
+```
 
 This plugin requires an additional view hook which can be added by
 applying a patch to your Redmine instance. From your Redmine path run:
@@ -32,6 +37,12 @@ One of the following environment variables need to be set:
 
 They must contain secrets which have to be configured in GitLab/GitHub to
 authenticate webhooks.
+
+Export the environment variable(s) in your bash or webserver config.
+Examples with Phusion Passenger webserver can be found here:
+https://www.phusionpassenger.com/library/indepth/environment_variables.html
+
+Finally, restart your webserver.
 
 
 ## Usage
@@ -70,17 +81,6 @@ Create a webhook in GitLab or GitHub as described here:
 * Check the "Pull requests" event.
 
 * Click "Add webhook".
-
-### Redmine server
-
-* Export the environment variable(s) in your bash or webserver config.
-  Examples with Phusion Passenger webserver can be found here:
-  https://www.phusionpassenger.com/library/indepth/environment_variables.html
-
-* Run plugin migrations from your redmine root directory
-  `rake redmine:plugins:migrate RAILS_ENV=production`
-
-* Restart your webserver
 
 
 ## Known Issues
