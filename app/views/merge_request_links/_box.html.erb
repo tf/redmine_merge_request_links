@@ -1,4 +1,4 @@
-<% if User.current.allowed_to?(:browse_repository, @project) %>
+<% if User.current.allowed_to?(:view_associated_merge_requests, @project) %>
   <% merge_requests = MergeRequest.find_all_by_issue(@issue) %>
 
   <% if merge_requests.present? %>

@@ -1,3 +1,5 @@
 de:
+  project_module_merge_request_links: Merge Request Verweise
+  permission_view_associated_merge_requests: Zugehörige Merge Requests sehen
   mrl_label_associated_merge_requests: Zugehörige Merge Requests
   mrl_label_by: von
