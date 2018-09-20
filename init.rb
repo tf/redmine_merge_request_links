@@ -9,6 +9,10 @@ Redmine::Plugin.register :redmine_merge_request_links do
   author_url 'https://github.com/tf'
 
   requires_redmine version_or_higher: '3.0'
+
+  project_module :merge_request_links do
+    permission :view_associated_merge_requests, {}
+  end
 end
 
 require 'redmine_merge_request_links'

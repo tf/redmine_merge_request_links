@@ -26,23 +26,33 @@ class IssuesControllerTest < ActionController::TestCase
            :queries
 
   def test_renders_issue_merge_requests
-    @request.session[:user_id] = developer_user.id
-
     merge_request = MergeRequest.create!(title: 'Some merge request')
     merge_request.issues << issue
 
+    sign_in(user_with_permission)
     get(:show, id: issue.id)
 
     assert_response :success
     assert_select "#merge-request-#{merge_request.id}"
   end
 
-  def test_requires_browse_repository_permission
-    @request.session[:user_id] = user_without_browse_repository_permission.id
-
+  def test_requires_merge_request_links_mobile_to_be_enabled
+    issue.project.enabled_module_names -= ['merge_request_links']
     merge_request = MergeRequest.create!(title: 'Some merge request')
     merge_request.issues << issue
 
+    sign_in(user_with_permission)
+    get(:show, id: issue.id)
+
+    assert_response :success
+    assert_select "#merge-request-#{merge_request.id}", count: 0
+  end
+
+  def test_requires_permission
+    merge_request = MergeRequest.create!(title: 'Some merge request')
+    merge_request.issues << issue
+
+    sign_in(user_without_permission)
     get(:show, id: issue.id)
 
     assert_response :success
@@ -51,21 +61,27 @@ class IssuesControllerTest < ActionController::TestCase
 
   private
 
-  def developer_user
-    User.find(3)
+  def sign_in(user)
+    @request.session[:user_id] = user.id
   end
 
-  def user_without_browse_repository_permission
-    developer_user.tap do |user|
+  def user_with_permission
+    user_without_permission.tap do |user|
       member = Member.where(user: user, project_id: issue.project_id).first
 
       role = member.roles.first
-      role.permissions.delete(:browse_repository)
+      role.permissions << :view_associated_merge_requests
       role.save!
     end
   end
 
+  def user_without_permission
+    User.find(3)
+  end
+
   def issue
-    @issue ||= Issue.find(1)
+    @issue ||= Issue.find(1).tap do |issue|
+      issue.project.enabled_module_names += ['merge_request_links']
+    end
   end
 end
