@@ -49,15 +49,6 @@ Finally, restart your webserver.
 
 Create a webhook in GitLab or GitHub as described here:
 
-### Redmine Administration
-
-To display associated merge requests on issue pages:
-
-* Add the "View associated merge requests" permission to one or more
-  roles.
-
-* Enable the "Merge request links" project module.
-
 ### GitLab
 
 * Go to either the webhook page of a project (Settings > Integration)
@@ -90,6 +81,15 @@ To display associated merge requests on issue pages:
 * Check the "Pull requests" event.
 
 * Click "Add webhook".
+
+### Redmine Administration
+
+To display associated merge requests on issue pages:
+
+* Add the "View associated merge requests" permission to one or more
+  roles.
+
+* Enable the "Merge request links" project module.
 
 
 ## Known Issues
