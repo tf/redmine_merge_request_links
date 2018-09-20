@@ -2,6 +2,8 @@
 
 ## Version 2.0
 
+2018-09-20
+
 - **Breaking Change:** Add project module and permission
   ([#8](https://github.com/tf/redmine_merge_request_links/pull/8),
    [#4](https://github.com/tf/redmine_merge_request_links/pull/4))
