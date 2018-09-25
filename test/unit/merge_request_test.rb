@@ -70,6 +70,15 @@ class MergeRequestTest < ActiveSupport::TestCase
     assert_includes(merge_request.issues, issue)
   end
 
+  def test_supports_issue_id_with_redmine_prefix
+    issue = Issue.last
+    merge_request = MergeRequest.create!
+
+    merge_request.update!(description: "see REDMINE-#{issue.id}")
+
+    assert_includes(merge_request.issues, issue)
+  end
+
   def test_issue_id_can_be_at_beginning_of_description
     issue = Issue.last
     merge_request = MergeRequest.create!

@@ -45,7 +45,7 @@ https://www.phusionpassenger.com/library/indepth/environment_variables.html
 Finally, restart your webserver.
 
 
-## Usage
+## Configuration
 
 Create a webhook in GitLab or GitHub as described here:
 
@@ -82,7 +82,7 @@ Create a webhook in GitLab or GitHub as described here:
 
 * Click "Add webhook".
 
-### Redmine Administration
+### Redmine
 
 To display associated merge requests on issue pages:
 
@@ -90,6 +90,13 @@ To display associated merge requests on issue pages:
   roles.
 
 * Enable the "Merge request links" project module.
+
+
+## Usage
+
+Create a merge request and reference a Redmine issue either in the
+form `#123` or `REDMINE-123`. See a link to the merge request appear
+on the issue's Redmine page.
 
 
 ## Known Issues
