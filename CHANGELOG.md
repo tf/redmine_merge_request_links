@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 2.1
+
+2018-09-25
+
+- Support Redmine issue links of the form `REDMINE-123`.
+  ([#9](https://github.com/tf/redmine_merge_request_links/pull/9))
+
 ## Version 2.0
 
 2018-09-20
