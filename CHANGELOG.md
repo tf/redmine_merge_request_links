@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 2.1.1
+
+2018-09-26
+
+- Ensure merged GitHub pull requests are displayed as `merged` not
+  just `closed`.
+  ([#10](https://github.com/tf/redmine_merge_request_links/pull/10))
+
 ## Version 2.1
 
 2018-09-25
