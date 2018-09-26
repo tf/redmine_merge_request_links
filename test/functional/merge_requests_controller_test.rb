@@ -316,6 +316,36 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert_includes(merge_request.issues, issue)
   end
 
+  def test_sets_state_to_merged_if_closed_and_merged
+    url = 'https://github.com/Codertocat/Hello-World/pull/1'
+
+    payload = {
+      pull_request: {
+        html_url: url,
+        title: 'Some pull request',
+        state: 'closed',
+        merged: true,
+        number: 12,
+        user: {
+          login: 'someuser'
+        },
+        base: {
+          repo: {
+            full_name: 'group/project'
+          }
+        }
+      }
+    }
+    request.headers['X-GitHub-Event'] = 'pull_request'
+    request.headers['X-Hub-Signature'] = hub_signature(payload)
+    post(:event, payload)
+
+    assert_response :success
+
+    merge_request = MergeRequest.where(url: url).first
+    assert_equal 'merged', merge_request.state
+  end
+
   def test_responds_with_bad_request_if_unknown_event
     post(:event)
 

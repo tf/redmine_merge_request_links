@@ -25,13 +25,18 @@ module RedmineMergeRequestLinks
       def parse_params(params)
         params
           .require(:pull_request)
-          .permit(:state, :html_url, :title, :body, :number,
+          .permit(:state, :merged, :html_url, :title, :body, :number,
                   user: :login,
                   base: { repo: :full_name }).tap do |attributes|
 
+          merged = attributes.delete(:merged)
           user = attributes.delete(:user) || {}
           base = attributes.delete(:base) || {}
           repo = base.fetch(:repo, {})
+
+          if attributes[:state] == 'closed' && merged
+            attributes[:state] = 'merged'
+          end
 
           attributes[:provider] = 'github'
           attributes[:url] = attributes.delete(:html_url)
