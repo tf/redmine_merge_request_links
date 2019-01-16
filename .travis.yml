@@ -1,10 +1,14 @@
 sudo: required
 
+env:
+  - REDMINE_VERSION: 3.4
+  - REDMINE_VERSION: 4.0
+
 services:
   - docker
 
 before_install:
-  - bin/build
+  - bin/build --build-arg REDMINE_VERSION=$REDMINE_VERSION
 
 script:
   - bin/test

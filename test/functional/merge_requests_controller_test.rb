@@ -1,6 +1,8 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class MergeRequestsControllerTest < ActionController::TestCase
+  include RedmineMergeRequestLinks::RequestTestHelperCompat
+
   TOKEN = 'secret'
   MERGE_REQUEST_URL = 'https://gitlab.example.com/project/merge_requests/1'
 
