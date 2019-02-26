@@ -1,4 +1,5 @@
-FROM redmine:3.4.6
+ARG REDMINE_VERSION=3.4
+FROM redmine:${REDMINE_VERSION}
 
 COPY patches/view_hook_issues_show_after_details.patch /
 RUN git apply /view_hook_issues_show_after_details.patch

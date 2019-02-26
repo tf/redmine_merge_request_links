@@ -1,6 +1,8 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class IssuesControllerTest < ActionController::TestCase
+  include RedmineMergeRequestLinks::RequestTestHelperCompat
+
   fixtures :projects,
            :users,
            :roles,
