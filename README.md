@@ -27,7 +27,7 @@ This plugin requires an additional view hook which can be added by
 applying a patch to your Redmine instance. From your Redmine path run:
 
 ```bash
-$ git apply plugins/redmine_merge_request_links/patches/view_hook_issues_show_after_details.patch
+$ git apply plugins/redmine_merge_request_links/patches/view_hook_issues_show_after_details_redmine_3.4.patch
 ```
 
 One of the following environment variables need to be set:
