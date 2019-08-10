@@ -10,6 +10,16 @@ module RedmineMergeRequestLinks
       end
 
       def verify(request)
+        request.body.rewind
+        payload = request.body.read
+
+        signature =
+          'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'),
+                                            @token,
+                                            payload)
+
+        Rack::Utils.secure_compare(signature,
+                                   request.headers['X-Gitea-Signature'])
       end
 
       def parse_params(params)

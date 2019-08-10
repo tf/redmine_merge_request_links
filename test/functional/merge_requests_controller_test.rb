@@ -378,7 +378,28 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert_equal 'Some pull request', merge_request.title
     assert_equal 'group/project#12', merge_request.display_id
     assert_equal '@someuser', merge_request.author_name
-    assert_equal 'github', merge_request.provider
+    assert_equal 'gitea', merge_request.provider
+  end
+
+  def test_responds_with_forbidden_if_gitea_signature_is_incorrect
+    request.headers['X-Gitea-Event'] = 'pull_request'
+    request.headers['X-Gitea-Signature'] = 'wrong'
+    post(:event, pull_request: {
+           html_url: 'https://gitea.com/Codertocat/Hello-World/pull/1',
+           title: 'Some pull request',
+           state: 'closed',
+           number: 12,
+           user: {
+             login: 'someuser'
+           },
+           base: {
+             repo: {
+               full_name: 'group/project'
+             }
+           }
+         })
+
+    assert_response :forbidden
   end
 
   def test_associates_issues_mentioned_in_gitea_pr_body
