@@ -368,6 +368,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
+    request.headers['X-Gitea-Signature'] = hub_signature(payload)
     post(:event, payload)
 
     assert_response :success
@@ -424,6 +425,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
+    request.headers['X-Gitea-Signature'] = hub_signature(payload)
     post(:event, payload)
 
     merge_request = MergeRequest.where(url: url).first
@@ -452,6 +454,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
+    request.headers['X-Gitea-Signature'] = hub_signature(payload)
     post(:event, payload)
 
     merge_request = MergeRequest.where(url: url).first
@@ -479,6 +482,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
+    request.headers['X-Gitea-Signature'] = hub_signature(payload)
     post(:event, payload)
 
     assert_response :success
