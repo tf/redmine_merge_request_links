@@ -522,7 +522,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
   end
 
   def gitea_signature(payload)
-    'sha256=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'),
+    OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'),
                                       TOKEN,
                                       payload.to_query)
   end

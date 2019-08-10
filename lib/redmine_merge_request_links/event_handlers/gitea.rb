@@ -13,8 +13,7 @@ module RedmineMergeRequestLinks
         request.body.rewind
         payload = request.body.read
 
-        signature =
-          'sha256=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'),
+        signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'),
                                             @token,
                                             payload)
 
