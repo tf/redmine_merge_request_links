@@ -371,8 +371,8 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitea-Event'] = 'pull_request'
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Gogs-Event'] = 'pull_request'
-    request.headers['X-Gitea-Signature'] = hub_signature(payload)
-    request.headers['X-Gogs-Signature'] = hub_signature(payload)
+    request.headers['X-Gitea-Signature'] = gitea_signature(payload)
+    request.headers['X-Gogs-Signature'] = gitea_signature(payload)
 
     post(:event, payload)
 
@@ -434,8 +434,8 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitea-Event'] = 'pull_request'
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Gogs-Event'] = 'pull_request'
-    request.headers['X-Gitea-Signature'] = hub_signature(payload)
-    request.headers['X-Gogs-Signature'] = hub_signature(payload)
+    request.headers['X-Gitea-Signature'] = gitea_signature(payload)
+    request.headers['X-Gogs-Signature'] = gitea_signature(payload)
     post(:event, payload)
 
     merge_request = MergeRequest.where(url: url).first
@@ -466,8 +466,8 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitea-Event'] = 'pull_request'
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Gogs-Event'] = 'pull_request'
-    request.headers['X-Gitea-Signature'] = hub_signature(payload)
-    request.headers['X-Gogs-Signature'] = hub_signature(payload)
+    request.headers['X-Gitea-Signature'] = gitea_signature(payload)
+    request.headers['X-Gogs-Signature'] = gitea_signature(payload)
     post(:event, payload)
 
     merge_request = MergeRequest.where(url: url).first
@@ -497,8 +497,8 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitea-Event'] = 'pull_request'
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Gogs-Event'] = 'pull_request'
-    request.headers['X-Gitea-Signature'] = hub_signature(payload)
-    request.headers['X-Gogs-Signature'] = hub_signature(payload)
+    request.headers['X-Gitea-Signature'] = gitea_signature(payload)
+    request.headers['X-Gogs-Signature'] = gitea_signature(payload)
     post(:event, payload)
 
     assert_response :success
@@ -517,6 +517,12 @@ class MergeRequestsControllerTest < ActionController::TestCase
 
   def hub_signature(payload)
     'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'),
+                                      TOKEN,
+                                      payload.to_query)
+  end
+
+  def gitea_signature(payload)
+    'sha256=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'),
                                       TOKEN,
                                       payload.to_query)
   end
