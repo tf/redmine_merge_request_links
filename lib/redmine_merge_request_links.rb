@@ -7,8 +7,8 @@ module RedmineMergeRequestLinks
 
   mattr_accessor :event_handlers
   self.event_handlers = [
+    RedmineMergeRequestLinks::EventHandlers::Gitea.new(token: gitea_token),
     RedmineMergeRequestLinks::EventHandlers::Github.new(token: github_token),
-    RedmineMergeRequestLinks::EventHandlers::Gitlab.new(token: gitlab_token),
-    RedmineMergeRequestLinks::EventHandlers::Gitea.new(token: gitea_token)
+    RedmineMergeRequestLinks::EventHandlers::Gitlab.new(token: gitlab_token)
   ]
 end

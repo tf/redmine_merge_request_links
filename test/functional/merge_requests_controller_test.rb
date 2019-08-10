@@ -10,9 +10,9 @@ class MergeRequestsControllerTest < ActionController::TestCase
 
   def setup
     RedmineMergeRequestLinks.event_handlers = [
+      RedmineMergeRequestLinks::EventHandlers::Gitea.new(token: TOKEN),
       RedmineMergeRequestLinks::EventHandlers::Github.new(token: TOKEN),
-      RedmineMergeRequestLinks::EventHandlers::Gitlab.new(token: TOKEN),
-      RedmineMergeRequestLinks::EventHandlers::Gitea.new(token: TOKEN)
+      RedmineMergeRequestLinks::EventHandlers::Gitlab.new(token: TOKEN)
     ]
   end
 
@@ -369,7 +369,11 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
+    request.headers['X-GitHub-Event'] = 'pull_request'
+    request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = hub_signature(payload)
+    request.headers['X-Gogs-Signature'] = hub_signature(payload)
+
     post(:event, payload)
 
     assert_response :success
@@ -386,6 +390,8 @@ class MergeRequestsControllerTest < ActionController::TestCase
   def test_responds_with_forbidden_if_gitea_signature_is_incorrect
     request.headers['X-Gitea-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = 'wrong'
+    request.headers['X-Gogs-Event'] = 'pull_request'
+    request.headers['X-Gogs-Signature'] = 'wrong'
     post(:event, pull_request: {
            html_url: 'https://gitea.com/Codertocat/Hello-World/pull/1',
            title: 'Some pull request',
@@ -426,7 +432,10 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
+    request.headers['X-GitHub-Event'] = 'pull_request'
+    request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = hub_signature(payload)
+    request.headers['X-Gogs-Signature'] = hub_signature(payload)
     post(:event, payload)
 
     merge_request = MergeRequest.where(url: url).first
@@ -455,7 +464,10 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
+    request.headers['X-GitHub-Event'] = 'pull_request'
+    request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = hub_signature(payload)
+    request.headers['X-Gogs-Signature'] = hub_signature(payload)
     post(:event, payload)
 
     merge_request = MergeRequest.where(url: url).first
@@ -483,7 +495,10 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
+    request.headers['X-GitHub-Event'] = 'pull_request'
+    request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = hub_signature(payload)
+    request.headers['X-Gogs-Signature'] = hub_signature(payload)
     post(:event, payload)
 
     assert_response :success
