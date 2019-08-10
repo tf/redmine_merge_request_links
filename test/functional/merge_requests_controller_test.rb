@@ -348,6 +348,124 @@ class MergeRequestsControllerTest < ActionController::TestCase
     assert_equal 'merged', merge_request.state
   end
 
+  def test_gitea_pull_request_event_creates_merge_request
+    url = 'https://gitea.com/Codertocat/Hello-World/pull/1'
+
+    payload = {
+      pull_request: {
+        html_url: url,
+        title: 'Some pull request',
+        state: 'closed',
+        number: 12,
+        user: {
+          login: 'someuser'
+        },
+        base: {
+          repo: {
+            full_name: 'group/project'
+          }
+        }
+      }
+    }
+    request.headers['X-Gitea-Event'] = 'pull_request'
+    post(:event, payload)
+
+    assert_response :success
+
+    merge_request = MergeRequest.where(url: url).first
+    assert merge_request.present?
+    assert_equal 'closed', merge_request.state
+    assert_equal 'Some pull request', merge_request.title
+    assert_equal 'group/project#12', merge_request.display_id
+    assert_equal '@someuser', merge_request.author_name
+    assert_equal 'github', merge_request.provider
+  end
+
+  def test_associates_issues_mentioned_in_gitea_pr_body
+    url = 'https://gitea.com/Codertocat/Hello-World/pull/1'
+    issue = Issue.last
+
+    payload = {
+      pull_request: {
+        html_url: url,
+        title: 'Some pull request',
+        state: 'closed',
+        body: "Talks about ##{issue.id}",
+        number: 12,
+        user: {
+          login: 'someuser'
+        },
+        base: {
+          repo: {
+            full_name: 'group/project'
+          }
+        }
+      }
+    }
+    request.headers['X-Gitea-Event'] = 'pull_request'
+    post(:event, payload)
+
+    merge_request = MergeRequest.where(url: url).first
+    assert_includes(merge_request.issues, issue)
+  end
+
+  def test_associates_issues_mentioned_in_gitea_pr_title
+    url = 'https://gitea.com/Codertocat/Hello-World/pull/1'
+    issue = Issue.last
+
+    payload = {
+      pull_request: {
+        html_url: url,
+        title: "Some pull request (##{issue.id})",
+        state: 'closed',
+        body: 'Some text',
+        number: 12,
+        user: {
+          login: 'someuser'
+        },
+        base: {
+          repo: {
+            full_name: 'group/project'
+          }
+        }
+      }
+    }
+    request.headers['X-Gitea-Event'] = 'pull_request'
+    post(:event, payload)
+
+    merge_request = MergeRequest.where(url: url).first
+    assert_includes(merge_request.issues, issue)
+  end
+
+  def test_sets_state_to_merged_if_gitea_pr_is_closed_and_merged
+    url = 'https://gitea.com/Codertocat/Hello-World/pull/1'
+
+    payload = {
+      pull_request: {
+        html_url: url,
+        title: 'Some pull request',
+        state: 'closed',
+        merged: true,
+        number: 12,
+        user: {
+          login: 'someuser'
+        },
+        base: {
+          repo: {
+            full_name: 'group/project'
+          }
+        }
+      }
+    }
+    request.headers['X-Gitea-Event'] = 'pull_request'
+    post(:event, payload)
+
+    assert_response :success
+
+    merge_request = MergeRequest.where(url: url).first
+    assert_equal 'merged', merge_request.state
+  end
+
   def test_responds_with_bad_request_if_unknown_event
     post(:event)
 
