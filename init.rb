@@ -14,10 +14,7 @@ Redmine::Plugin.register :redmine_merge_request_links do
     permission :view_associated_merge_requests, {}
     permission :create_projectbased_tokens, {}
   end
-end
-
-Rails.configuration.to_prepare do
-  RedmineMergeRequestLinks::ProjectSettingsTabs.apply
+  menu :project_menu, :create_projectbased_tokens, { :controller => 'token', :action => 'index' }, :caption => 'Webhook Tokens', :after => :activity, :param => :project_id
 end
 
 require 'redmine_merge_request_links'

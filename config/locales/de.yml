@@ -2,5 +2,6 @@ de:
   project_module_merge_request_links: Merge Request Verweise
   permission_view_associated_merge_requests: Zugehörige Merge Requests sehen
   permission_create_projectbased_tokens: Projektbasierte Tokens anlegen
+  label_webhook_tokens: Webhook Tokens
   mrl_label_associated_merge_requests: Zugehörige Merge Requests
   mrl_label_by: von
