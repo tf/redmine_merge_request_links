@@ -2,15 +2,11 @@ module RedmineMergeRequestLinks
   class EventHandlerBase
     def initialize(tokens:)
       @tokens = tokens
-      @project_id = nil
-    end
-
-    def verify_project(project: Project)
-      @project_id == nil || project.id == @project_id
+      @project_ids = ['*']
     end
 
     def get_allowed_projects
-      if @project_id == nil
+      if @project_ids[0] == '*'
         return ['*']
       end
       allowed_projects = []
@@ -34,7 +30,7 @@ module RedmineMergeRequestLinks
       for token in @tokens
         if verify_token(token[:token], request, payload) == true
           if token[:project_id] != nil
-            @project_id = token[:project_id]
+            @project_ids = token[:project_ids]
           end
           return true
         end

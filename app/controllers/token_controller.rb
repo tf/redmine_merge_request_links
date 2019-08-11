@@ -1,13 +1,10 @@
 class TokenController < ApplicationController
   helper_method :get_token
-  before_action :find_project, :load_token
+  before_action :find_project
+  before_action :load_token, except: [:index]
 
   def index
-    @providers = [
-        :github,
-        :gitlab,
-        :gitea
-    ]
+    @providers = RedmineMergeRequestLinks::providers
   end
 
   def view
@@ -67,6 +64,9 @@ class TokenController < ApplicationController
 
   def load_token
     @provider = params[:provider]
+    unless RedmineMergeRequestLinks::providers.include?(@provider.to_sym)
+      return head :bad_request
+    end
     @token = get_token(@provider)
   end
 end
