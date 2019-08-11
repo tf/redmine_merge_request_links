@@ -1,25 +1,13 @@
 module RedmineMergeRequestLinks
   module EventHandlers
-    class Github
-      def initialize(token:)
-        @token = token
-      end
-
+    class Github < RedmineMergeRequestLinks::EventHandlerBase
       def matches?(request)
         request.headers['X-GitHub-Event'] == 'pull_request'
       end
 
-      def verify(request)
-        request.body.rewind
-        payload = request.body.read
-
-        signature =
-          'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'),
-                                            @token,
-                                            payload)
-
-        Rack::Utils.secure_compare(signature,
-                                   request.headers['X-Hub-Signature'])
+      def verify_token(token, request, payload)
+        signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), token, payload)
+        Rack::Utils.secure_compare(signature, request.headers['X-Hub-Signature'])
       end
 
       def parse_params(params)

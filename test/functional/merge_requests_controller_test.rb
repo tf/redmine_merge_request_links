@@ -10,9 +10,15 @@ class MergeRequestsControllerTest < ActionController::TestCase
 
   def setup
     RedmineMergeRequestLinks.event_handlers = [
-      RedmineMergeRequestLinks::EventHandlers::Gitea.new(token: TOKEN),
-      RedmineMergeRequestLinks::EventHandlers::Github.new(token: TOKEN),
-      RedmineMergeRequestLinks::EventHandlers::Gitlab.new(token: TOKEN)
+      RedmineMergeRequestLinks::EventHandlers::Gitea.new(tokens: [
+          {:token => TOKEN, :project_id => nil }
+      ]),
+      RedmineMergeRequestLinks::EventHandlers::Github.new(tokens: [
+          {:token => TOKEN, :project_id => nil }
+      ]),
+      RedmineMergeRequestLinks::EventHandlers::Gitlab.new(tokens: [
+          {:token => TOKEN, :project_id => nil }
+      ])
     ]
   end
 

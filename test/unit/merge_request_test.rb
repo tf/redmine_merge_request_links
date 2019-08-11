@@ -2,6 +2,7 @@ require File.expand_path('../../test_helper', __FILE__)
 
 class MergeRequestTest < ActiveSupport::TestCase
   fixtures :issues
+  fixtures :projects
 
   def test_updates_issues_from_description
     issue = Issue.last
@@ -85,6 +86,34 @@ class MergeRequestTest < ActiveSupport::TestCase
 
     merge_request.update!(description: "##{issue.id}")
 
+    assert_includes(merge_request.issues, issue)
+  end
+
+  def test_only_allow_whitelisted_projects
+    issue = Issue.last
+
+    # not whitelisted
+    merge_request = MergeRequest.create!
+    merge_request.allowed_projects = [issue.project.id + 1]
+    merge_request.update!(description: "##{issue.id}")
+    assert_not_includes(merge_request.issues, issue)
+
+    # whitelisted
+    merge_request = MergeRequest.create!
+    merge_request.allowed_projects = [issue.project.id]
+    merge_request.update!(description: "##{issue.id}")
+    assert_includes(merge_request.issues, issue)
+
+    # whitelisted - multiple ids
+    merge_request = MergeRequest.create!
+    merge_request.allowed_projects = [issue.project.id + 1, issue.project.id]
+    merge_request.update!(description: "##{issue.id}")
+    assert_includes(merge_request.issues, issue)
+
+    # no limits
+    merge_request = MergeRequest.create!
+    merge_request.allowed_projects = ['*']
+    merge_request.update!(description: "##{issue.id}")
     assert_includes(merge_request.issues, issue)
   end
 
