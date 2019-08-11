@@ -19,7 +19,7 @@ class MergeRequestsController < ApplicationController
   private
 
   def find_event_handler
-    RedmineMergeRequestLinks.event_handlers.detect do |event_handler|
+    RedmineMergeRequestLinks::get_event_handlers.detect do |event_handler|
       event_handler.matches?(request)
     end
   end

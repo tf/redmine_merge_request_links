@@ -30,10 +30,15 @@ class MergeRequest < ActiveRecord::Base
     self.issues = []
     mentioned_issue_ids.each do |match|
       issue = Issue.find_by_id(match[0])
-      if @allowed_projects[0] == '*' || @allowed_projects.include?(issue.project.id)
+      if issue != nil && (@allowed_projects[0] == '*' || @allowed_projects.include?(issue.project.id))
         self.issues.push(issue)
       end
-    end.compact
+    end
+    if self.issues.length == 0
+      raise ActionController::RoutingError.new(
+        "No issue found. It might not exist or its project is no accessible through the token."
+      )
+    end
   end
 
   def mentioned_issue_ids

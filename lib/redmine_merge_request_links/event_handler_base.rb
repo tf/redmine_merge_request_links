@@ -6,17 +6,7 @@ module RedmineMergeRequestLinks
     end
 
     def get_allowed_projects
-      if @project_ids[0] == '*'
-        return ['*']
-      end
-      allowed_projects = []
-      projects = [Project.find(@project_id)]
-      projects.each do |project|
-        allowed_projects.push(project.id)
-        projects << project
-      end
-
-      allowed_projects
+      @project_ids
     end
 
     def verify_token(token, request, payload)
@@ -29,8 +19,8 @@ module RedmineMergeRequestLinks
 
       for token in @tokens
         if verify_token(token[:token], request, payload) == true
-          if token[:project_id] != nil
-            @project_ids = token[:project_ids]
+          if token[:projects] != []
+            @project_ids = token[:projects]
           end
           return true
         end

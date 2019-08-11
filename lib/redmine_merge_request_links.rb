@@ -8,9 +8,6 @@ module RedmineMergeRequestLinks
       :gitlab
   ]
 
-  mattr_accessor :event_handlers
-  self.event_handlers = []
-
   def get_descendant_ids(project: Project)
     ids = []
     project.descendants.each do |subproject|
@@ -22,33 +19,42 @@ module RedmineMergeRequestLinks
     ids
   end
 
-  tokens = {}
-  self.providers.each do |provider|
-    tokens[provider] = []
+  def self.collect_tokens
+    tokens = {}
+    self.providers.each do |provider|
+      tokens[provider] = []
 
-    # Get global token from environment if exists
-    envtoken = ENV["REDMINE_MERGE_REQUEST_LINKS_#{provider.to_s.upcase}_WEBHOOK_TOKEN"]
-    if envtoken.present?
-      tokens[provider].push({:token => envtoken, :projects => nil })
-    end
+      # Get global token from environment if exists
+      envtoken = ENV["REDMINE_MERGE_REQUEST_LINKS_#{provider.to_s.upcase}_WEBHOOK_TOKEN"]
+      if envtoken.present?
+        tokens[provider].push({:token => envtoken, :projects => [] })
+      end
 
-    # Get tokens from database
-    dbtokens = ProjectsMergeRequestToken.where :provider => provider
-    if dbtokens != nil
-      dbtokens.each do |dbtoken|
-        tokens[provider].push({:token => dbtoken.token, :projects => dbtoken.project_id })
-        if dbtoken.subprojects
-
-
-          # todo: add tokens for subprojects
+      # Get tokens from database
+      dbtokens = ProjectsMergeRequestToken.where :provider => provider
+      if dbtokens != nil
+        dbtokens.each do |dbtoken|
+          projects = [dbtoken.project_id]
+          if dbtoken.subprojects
+            # todo: add tokens for subprojects
+          end
+          tokens[provider].push({:token => dbtoken.token, :projects => projects })
         end
       end
     end
+    tokens
+  end
 
-    Logger.new(STDOUT).error "Processing the request..."
-
-    # Create new instance of EventHandler and add it to array
-    class_name = "RedmineMergeRequestLinks::EventHandlers::#{provider.to_s.upcase_first}"
-    self.event_handlers.push(Object::const_get(class_name).new(tokens: tokens[provider]))
+  def self.get_event_handlers
+    event_handlers = []
+    tokens = self.collect_tokens
+    self.providers.each do |provider|
+      # Create new instance of EventHandler and add it to array
+      if tokens[provider] != nil && tokens[provider].length > 0
+        class_name = "RedmineMergeRequestLinks::EventHandlers::#{provider.to_s.upcase_first}"
+        event_handlers.push(Object::const_get(class_name).new(tokens: tokens[provider]))
+      end
+    end
+    event_handlers
   end
 end
