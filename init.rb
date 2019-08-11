@@ -12,7 +12,12 @@ Redmine::Plugin.register :redmine_merge_request_links do
 
   project_module :merge_request_links do
     permission :view_associated_merge_requests, {}
+    permission :create_projectbased_tokens, {}
   end
+end
+
+Rails.configuration.to_prepare do
+  RedmineMergeRequestLinks::ProjectSettingsTabs.apply
 end
 
 require 'redmine_merge_request_links'
