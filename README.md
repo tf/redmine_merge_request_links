@@ -2,17 +2,20 @@
 
 [![Build Status](https://travis-ci.org/tf/redmine_merge_request_links.svg?branch=master)](https://travis-ci.org/tf/redmine_merge_request_links)
 
-Display links to associated GitLab merge requests and GitHub pull
-requests on Redmine's issue page.
+Display links to associated merge requests and pull requests on Redmine's issue page.
 
-Intercepts webhooks and parses merge request descriptions for
-mentioned issue ids.
+Intercepts webhooks and parses merge request descriptions for mentioned issue ids.
+
+The following platforms are supported:
+
+* GitHub
+* GitLab
+* Gitea
 
 
 ## Requirements
 
 * Redmine 3 (tested with 3.4.6)
-
 
 ## Installation
 
@@ -82,6 +85,24 @@ Create a webhook in GitLab or GitHub as described here:
 
 * Click "Add webhook".
 
+### Gitea
+
+* Go to the webhook page of a project or organization.
+
+* Enter the URL of your Redmine instance
+  `https://redmine.example.com/merge_requests/event`.
+
+* Select `application/json` as content type.
+
+* Enter the secret token you defined in environment variable
+  `REDMINE_MERGE_REQUEST_LINKS_GITEA_WEBHOOK_TOKEN`.
+
+* Choose "Custom events...".
+
+* Check the "Pull requests" event.
+
+* Click "Add webhook".
+
 ### Redmine
 
 To display associated merge requests on issue pages:
@@ -101,7 +122,7 @@ on the issue's Redmine page.
 
 ## Known Issues
 
-* Gitlab only passes the author id as part of the merge request
+* GitLab only passes the author id as part of the merge request
   webhook not a display name. It does include the username of the user
   whose action triggered the webhook, though. To prevent having to
   fetch the author name in a separate REST API call, this username is
