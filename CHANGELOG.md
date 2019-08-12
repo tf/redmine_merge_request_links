@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 2.2
+
+2019-08-12
+
+- Gitea support
+  ([#18](https://github.com/tf/redmine_merge_request_links/pull/18))
+
 ## Version 2.1.1
 
 2018-09-26
