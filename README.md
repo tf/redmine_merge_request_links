@@ -41,6 +41,11 @@ One of the following environment variables need to be set:
 They must contain secrets which have to be configured in GitLab/GitHub to
 authenticate webhooks.
 
+Optionally, you can also set the following variables:
+
+* `REDMINE_MERGE_REQUEST_LINKS_AFTER_MERGE_STATUS` - Name of issue status which should be set after the merge request is merged.
+* `REDMINE_MERGE_REQUEST_LINKS_GITLAB_REDMINE_USER_ID` - ID of Redmine user who should change the status - used as journal author.
+
 Export the environment variable(s) in your bash or webserver config.
 Examples with Phusion Passenger webserver can be found here:
 https://www.phusionpassenger.com/library/indepth/environment_variables.html
