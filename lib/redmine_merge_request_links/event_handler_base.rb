@@ -48,15 +48,21 @@ module RedmineMergeRequestLinks
 
     end
 
+    def get_all_tokens
+      tokens = []
+      if @token != nil
+        tokens.push(@token)
+      end
+      tokens += self.get_database_tokens
+
+      tokens
+    end
+
     def verify(request)
       request.body.rewind
       payload = request.body.read
 
-      tokens = get_database_tokens
-      unless @token
-        tokens.shift(@token)
-      end
-      for token in tokens
+      for token in self.get_all_tokens
         if verify_token(token[:token], request, payload) == true
           if token[:projects] != []
             @active_token_project_ids = token[:projects]
