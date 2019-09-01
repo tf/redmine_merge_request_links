@@ -10,7 +10,7 @@ class MergeRequestsController < ApplicationController
     attributes = event_handler.parse_params(params)
 
     merge_request = MergeRequest.find_or_initialize_by(url: attributes[:url])
-    merge_request.allowed_projects = event_handler.get_allowed_projects
+    merge_request.allowed_projects = event_handler.get_active_token[:projects]
 
     begin
       merge_request.update!(attributes)

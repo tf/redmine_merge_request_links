@@ -10,15 +10,9 @@ class MergeRequestsControllerTest < ActionController::TestCase
 
   def setup
     RedmineMergeRequestLinks.event_handlers = [
-      RedmineMergeRequestLinks::EventHandlers::Gitea.new(tokens: [
-          {:token => TOKEN, :project_id => nil }
-      ]),
-      RedmineMergeRequestLinks::EventHandlers::Github.new(tokens: [
-          {:token => TOKEN, :project_id => nil }
-      ]),
-      RedmineMergeRequestLinks::EventHandlers::Gitlab.new(tokens: [
-          {:token => TOKEN, :project_id => nil }
-      ])
+      RedmineMergeRequestLinks::EventHandlers::Gitea.new(token: TOKEN),
+      RedmineMergeRequestLinks::EventHandlers::Github.new(token: TOKEN),
+      RedmineMergeRequestLinks::EventHandlers::Gitlab.new(token: TOKEN)
     ]
   end
 
@@ -359,6 +353,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     url = 'https://gitea.com/Codertocat/Hello-World/pull/1'
 
     payload = {
+      secret: 'secret',
       pull_request: {
         html_url: url,
         title: 'Some pull request',
@@ -375,7 +370,6 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
-    request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)
@@ -399,6 +393,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gogs-Signature'] = 'wrong'
     post(:event, pull_request: {
+           secret: 'secret',
            html_url: 'https://gitea.com/Codertocat/Hello-World/pull/1',
            title: 'Some pull request',
            state: 'closed',
@@ -421,6 +416,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     issue = Issue.last
 
     payload = {
+      secret: 'secret',
       pull_request: {
         html_url: url,
         title: 'Some pull request',
@@ -438,7 +434,6 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
-    request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)
@@ -453,6 +448,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     issue = Issue.last
 
     payload = {
+      secret: 'secret',
       pull_request: {
         html_url: url,
         title: "Some pull request (##{issue.id})",
@@ -470,7 +466,6 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
-    request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)
@@ -484,6 +479,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     url = 'https://gitea.com/Codertocat/Hello-World/pull/1'
 
     payload = {
+      secret: 'secret',
       pull_request: {
         html_url: url,
         title: 'Some pull request',
@@ -501,7 +497,6 @@ class MergeRequestsControllerTest < ActionController::TestCase
       }
     }
     request.headers['X-Gitea-Event'] = 'pull_request'
-    request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)

@@ -1,16 +1,11 @@
 module RedmineMergeRequestLinks
   class EventHandlerBase
-    def initialize()
+    def initialize(token:)
       @token = nil
-      self.set_envtoken
-      @active_token_project_ids = ['*']
-    end
-
-    def set_envtoken
-      envtoken = ENV["REDMINE_MERGE_REQUEST_LINKS_#{get_provider_name.to_s.upcase}_WEBHOOK_TOKEN"]
-      if envtoken.present?
-        @token = {:token => envtoken, :projects => ['*'] }
+      unless token == nil
+          @token = {:token => token, :projects => ['*'] }
       end
+      @active_token = nil
     end
 
     def get_provider_name
@@ -23,29 +18,29 @@ module RedmineMergeRequestLinks
       dbtokens = ProjectsMergeRequestToken.where :provider => self.get_provider_name
       if dbtokens != nil
         dbtokens.each do |dbtoken|
-          projectsids = []
+          project_ids = []
           project = Project.find_by_id dbtoken.project_id
           projects_queue = [ project ]
           current_project = projects_queue.shift
           until current_project == nil
-            projectsids.push current_project.id
+            project_ids.push current_project.id
             if dbtoken.subprojects
               projects_queue += current_project.children
             end
             current_project = projects_queue.shift
           end
-          tokens.push({:token => dbtoken.token, :projects => projectsids })
+          tokens.push({:token => dbtoken.token, :projects => project_ids })
         end
       end
       tokens
     end
 
-    def get_allowed_projects
-      @active_token_project_ids
+    def get_active_token
+      @active_token
     end
 
     def verify_token(token, request, payload)
-
+      # Check if token from payload matches this token
     end
 
     def get_all_tokens
@@ -64,9 +59,7 @@ module RedmineMergeRequestLinks
 
       for token in self.get_all_tokens
         if verify_token(token[:token], request, payload) == true
-          if token[:projects] != []
-            @active_token_project_ids = token[:projects]
-          end
+          @active_token = token
           return true
         end
       end
