@@ -27,18 +27,25 @@ module RedmineMergeRequestLinks
       # Get global token from environment if exists
       envtoken = ENV["REDMINE_MERGE_REQUEST_LINKS_#{provider.to_s.upcase}_WEBHOOK_TOKEN"]
       if envtoken.present?
-        tokens[provider].push({:token => envtoken, :projects => [] })
+        tokens[provider].push({:token => envtoken, :projects => ['*'] })
       end
 
       # Get tokens from database
       dbtokens = ProjectsMergeRequestToken.where :provider => provider
       if dbtokens != nil
         dbtokens.each do |dbtoken|
-          projects = [dbtoken.project_id]
-          if dbtoken.subprojects
-            # todo: add tokens for subprojects
+          projectsids = []
+          project = Project.find_by_id dbtoken.project_id
+          projects_queue = [ project ]
+          current_project = projects_queue.shift
+          until current_project == nil
+            projectsids.push current_project.id
+            if dbtoken.subprojects
+              projects_queue += current_project.children
+            end
+            current_project = projects_queue.shift
           end
-          tokens[provider].push({:token => dbtoken.token, :projects => projects })
+          tokens[provider].push({:token => dbtoken.token, :projects => projectsids })
         end
       end
     end
