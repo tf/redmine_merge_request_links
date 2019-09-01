@@ -7,6 +7,10 @@ module RedmineMergeRequestLinks
            request.request_parameters['event_type'] == 'merge_request')
       end
 
+      def get_provider_name
+        'gitlab'
+      end
+
       def verify_token(token, request, payload)
         request.headers['X-Gitlab-Token'] == token
       end

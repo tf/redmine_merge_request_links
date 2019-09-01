@@ -5,6 +5,10 @@ module RedmineMergeRequestLinks
         request.headers['X-Gitea-Event'] == 'pull_request'
       end
 
+      def get_provider_name
+        'gitea'
+      end
+
       def verify_token(token, request, payload)
         return true
         signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), token, payload)

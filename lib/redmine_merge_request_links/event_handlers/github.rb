@@ -5,6 +5,10 @@ module RedmineMergeRequestLinks
         request.headers['X-GitHub-Event'] == 'pull_request'
       end
 
+      def get_provider_name
+        'github'
+      end
+
       def verify_token(token, request, payload)
         signature = 'sha1=' + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha1'), token, payload)
         Rack::Utils.secure_compare(signature, request.headers['X-Hub-Signature'])
