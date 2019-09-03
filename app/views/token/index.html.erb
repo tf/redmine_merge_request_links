@@ -15,7 +15,7 @@ Here you can add request tokens for use with repository webhooks.
   <% @providers.each do |provider| %>
     <tr>
       <td class="name">
-        <%= provider %>
+        <%= provider.capitalize %>
       </td>
 
       <% token = get_token(provider) %>

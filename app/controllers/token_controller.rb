@@ -4,20 +4,20 @@ class TokenController < ApplicationController
   before_action :load_token, except: [:index]
 
   def index
-    @providers = RedmineMergeRequestLinks::providers
+    @providers = RedmineMergeRequestLinks.providers
   end
 
   def view
     @editing = @token != nil
     if @editing == false
-      @action = 'create_post'
+      @action = 'create'
       @token = ProjectsMergeRequestToken.new(:provider => @provider, :project => @project)
     else
-      @action = 'edit_post'
+      @action = 'edit'
     end
   end
 
-  def create_post
+  def create
     if @token != nil
       flash[:error] = 'Token for this provider already exists.'
       redirect_to :action => 'index'
@@ -34,7 +34,7 @@ class TokenController < ApplicationController
     redirect_to :action => 'index'
   end
 
-  def edit_post
+  def edit
     if @token == nil
       flash[:error] = 'Token for this provider does not exists.'
       redirect_to :action => 'index'
