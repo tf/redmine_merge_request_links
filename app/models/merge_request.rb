@@ -34,11 +34,6 @@ class MergeRequest < ActiveRecord::Base
         self.issues.push(issue)
       end
     end
-    if self.issues.length == 0
-      raise ActionController::RoutingError.new(
-        "No issue found. It might not exist or its project is no accessible through the token."
-      )
-    end
   end
 
   def mentioned_issue_ids

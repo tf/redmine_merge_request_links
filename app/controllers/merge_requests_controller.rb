@@ -11,10 +11,8 @@ class MergeRequestsController < ApplicationController
 
     merge_request = MergeRequest.find_or_initialize_by(url: attributes[:url])
     merge_request.allowed_projects = event_handler.get_active_token[:projects]
-
-    begin
-      merge_request.update!(attributes)
-    rescue ActionController::RoutingError => e
+    merge_request.update!(attributes)
+    if merge_request.issues.length == 0
       # No matching target issue found -> delete relation
       merge_request.destroy
     end

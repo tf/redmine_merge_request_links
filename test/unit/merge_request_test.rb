@@ -7,6 +7,7 @@ class MergeRequestTest < ActiveSupport::TestCase
   def test_updates_issues_from_description
     issue = Issue.last
     merge_request = MergeRequest.create!
+    merge_request.allowed_projects = ['*']
 
     merge_request.update!(description: "see ##{issue.id}")
 
@@ -16,6 +17,7 @@ class MergeRequestTest < ActiveSupport::TestCase
   def test_updates_issues_from_title
     issue = Issue.last
     merge_request = MergeRequest.create!
+    merge_request.allowed_projects = ['*']
 
     merge_request.update!(title: "MR for ##{issue.id}")
 
@@ -25,6 +27,7 @@ class MergeRequestTest < ActiveSupport::TestCase
   def test_creates_one_association_even_if_mentioned_multiple_times
     issue = Issue.last
     merge_request = MergeRequest.create!
+    merge_request.allowed_projects = ['*']
 
     merge_request.update!(
       title: "MR for ##{issue.id}",
@@ -37,6 +40,7 @@ class MergeRequestTest < ActiveSupport::TestCase
   def test_removes_no_longer_mentioned_issues_on_update
     issue = Issue.last
     merge_request = MergeRequest.create!
+    merge_request.allowed_projects = ['*']
     merge_request.issues << issue
 
     merge_request.update!(description: 'Nothing mentioned')
@@ -47,6 +51,7 @@ class MergeRequestTest < ActiveSupport::TestCase
   def test_ignores_issue_ids_with_project_prefix
     issue = Issue.last
     merge_request = MergeRequest.create!
+    merge_request.allowed_projects = ['*']
 
     merge_request.update!(description: "some/project##{issue.id}")
 
@@ -56,6 +61,7 @@ class MergeRequestTest < ActiveSupport::TestCase
   def test_ignores_issue_ids_without_hash
     issue = Issue.last
     merge_request = MergeRequest.create!
+    merge_request.allowed_projects = ['*']
 
     merge_request.update!(description: "see #{issue.id}")
 
@@ -65,6 +71,7 @@ class MergeRequestTest < ActiveSupport::TestCase
   def test_issue_id_can_be_wrapped_in_braces
     issue = Issue.last
     merge_request = MergeRequest.create!
+    merge_request.allowed_projects = ['*']
 
     merge_request.update!(description: "(##{issue.id})")
 
@@ -74,6 +81,7 @@ class MergeRequestTest < ActiveSupport::TestCase
   def test_supports_issue_id_with_redmine_prefix
     issue = Issue.last
     merge_request = MergeRequest.create!
+    merge_request.allowed_projects = ['*']
 
     merge_request.update!(description: "see REDMINE-#{issue.id}")
 
@@ -83,6 +91,7 @@ class MergeRequestTest < ActiveSupport::TestCase
   def test_issue_id_can_be_at_beginning_of_description
     issue = Issue.last
     merge_request = MergeRequest.create!
+    merge_request.allowed_projects = ['*']
 
     merge_request.update!(description: "##{issue.id}")
 
@@ -120,7 +129,9 @@ class MergeRequestTest < ActiveSupport::TestCase
   def test_find_all_by_issue
     issue = Issue.last
     merge_request = MergeRequest.create!
+    merge_request.allowed_projects = ['*']
     merge_request.issues << issue
+
     other_merge_request = MergeRequest.create!
 
     assert_includes(MergeRequest.find_all_by_issue(issue), merge_request)
