@@ -12,10 +12,10 @@ class MergeRequestsController < ApplicationController
     merge_request = MergeRequest.find_or_initialize_by(url: attributes[:url])
     merge_request.allowed_projects = event_handler.get_active_token[:projects]
     merge_request.update!(attributes)
-    if merge_request.issues.length == 0
+    #if merge_request.issues.length == 0
       # No matching target issue found -> delete relation
-      merge_request.destroy
-    end
+    #  merge_request.destroy
+    #end
 
     head :ok
   end
