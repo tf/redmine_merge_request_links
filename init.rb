@@ -12,7 +12,9 @@ Redmine::Plugin.register :redmine_merge_request_links do
 
   project_module :merge_request_links do
     permission :view_associated_merge_requests, {}
+    permission :create_projectbased_tokens, { :token => [:index] }, :public => true
   end
+  menu :project_menu, :create_projectbased_tokens, { :controller => 'token', :action => 'index' }, :caption => 'Webhook Tokens', :after => :activity, :param => :project_id
 end
 
 require 'redmine_merge_request_links'

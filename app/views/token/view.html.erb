@@ -1,0 +1,26 @@
+<% if @editing == true %>
+  <h2>Edit token</h2>
+<% else %>
+  <h2>New token</h2>
+<% end %>
+
+<%= form_for @token, url: {action: @action}, html: {class: "nifty_form"} do |f| %>
+  <div class="box tabular">
+    <div id="all_attributes">
+      <p>
+        <label>Provider</label>
+        <%= @provider %>
+      </p>
+      <p>
+        <label for="issue_subject">Token<span class="required"> *</span></label>
+        <%= f.text_field :token, :required => 1 %>
+      </p>
+      <p>
+        <label for="issue_subject">Include subprojects?</label>
+        <%= f.check_box :subprojects %>
+      </p>
+    </div>
+  </div>
+  <%= f.submit @action %>
+  <%= link_to 'Back', controller: "token", action: "index", project_id: @project_id %>
+<% end %>

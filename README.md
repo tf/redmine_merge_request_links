@@ -35,11 +35,11 @@ $ git apply plugins/redmine_merge_request_links/patches/view_hook_issues_show_af
 
 One of the following environment variables need to be set:
 
+* `REDMINE_MERGE_REQUEST_LINKS_GITEA_WEBHOOK_TOKEN`
 * `REDMINE_MERGE_REQUEST_LINKS_GITLAB_WEBHOOK_TOKEN`
 * `REDMINE_MERGE_REQUEST_LINKS_GITHUB_WEBHOOK_TOKEN`
 
-They must contain secrets which have to be configured in GitLab/GitHub to
-authenticate webhooks.
+They must contain secrets which have to be configured in GitLab/GitHub/Gitea to authenticate webhooks.
 
 Export the environment variable(s) in your bash or webserver config.
 Examples with Phusion Passenger webserver can be found here:
@@ -50,7 +50,7 @@ Finally, restart your webserver.
 
 ## Configuration
 
-Create a webhook in GitLab or GitHub as described here:
+Create a webhook in GitLab, Gitea or GitHub as described here:
 
 ### GitLab
 
@@ -149,6 +149,17 @@ $ bin/test
 ```
 
 to run the test suite inside a Docker container.
+
+### Adding new providers
+
+If you want to add a new provider please add the following components tailored to the provider:
+ 
+* lib/redmine_merge_request_links/event_handlers/<provider_name>.rb: Verify that request should be processed by event handler. Verify that request and token is valid
+* lib/redmine_merge_request_links.rb: Register new provider by adding a new environment variable and instantiate the class
+* assets/images/: Add logo (preferably SVG file) for new provider
+* assets/stylesheets/redmine_merge_request_links.css: Add new CSS class for logo
+
+Feel free to look at the existing providers as a reference of implementation.
 
 ## License
 

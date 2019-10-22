@@ -1,24 +1,21 @@
 module RedmineMergeRequestLinks
   module EventHandlers
-    class Gitea
-      def initialize(token:)
-        @token = token
-      end
-
+    class Gitea < RedmineMergeRequestLinks::EventHandlerBase
       def matches?(request)
         request.headers['X-Gitea-Event'] == 'pull_request'
       end
 
-      def verify(request)
-        request.body.rewind
-        payload = request.body.read
+      def get_provider_name
+        'gitea'
+      end
 
-        signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'),
-                                            @token,
-                                            payload)
-
-        Rack::Utils.secure_compare(signature,
-                                   request.headers['X-Gitea-Signature'])
+      def verify_token(token, request, payload)
+        parsedPayload = CGI::parse( CGI::unescape(payload) )
+        unless parsedPayload['secret'][0] == token
+          return false
+        end
+        signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), token, payload)
+        Rack::Utils.secure_compare(signature, request.headers['X-Gitea-Signature'])
       end
 
       def parse_params(params)

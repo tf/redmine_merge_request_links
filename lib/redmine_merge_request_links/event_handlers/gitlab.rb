@@ -1,18 +1,18 @@
 module RedmineMergeRequestLinks
   module EventHandlers
-    class Gitlab
-      def initialize(token:)
-        @token = token
-      end
-
+    class Gitlab < RedmineMergeRequestLinks::EventHandlerBase
       def matches?(request)
         request.headers['X-Gitlab-Event'] == 'Merge Request Hook' ||
           (request.headers['X-Gitlab-Event'] == 'System Hook' &&
            request.request_parameters['event_type'] == 'merge_request')
       end
 
-      def verify(request)
-        request.headers['X-Gitlab-Token'] == @token
+      def get_provider_name
+        'gitlab'
+      end
+
+      def verify_token(token, request, payload)
+        request.headers['X-Gitlab-Token'] == token
       end
 
       def parse_params(params)

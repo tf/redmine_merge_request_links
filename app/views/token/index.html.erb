@@ -1,0 +1,52 @@
+<h2>Merge Request Tokens</h2>
+
+Here you can add request tokens for use with repository webhooks.
+
+<table class="list issue-report">
+  <thead>
+  <tr>
+    <th>Provider</th>
+    <th>Token</th>
+    <th>Subprojects?</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @providers.each do |provider| %>
+    <tr>
+      <td class="name">
+        <%= provider.capitalize %>
+      </td>
+
+      <% token = get_token(provider) %>
+      <% if token != nil %>
+        <td>
+          <%=token.token %>
+        </td>
+        <td>
+          <% if token.subprojects == true %>
+            j
+          <% else %>
+            n
+          <% end %>
+        </td>
+      <% else %>
+        <td colspan="2">
+          Does not exist
+        </td>
+      <% end %>
+      <td class="total">
+        <% if token != nil %>
+          <%= link_to 'Edit', controller: "token", action: "view", project_id: @project_id, provider: provider %>
+          <%= link_to 'Delete', controller: "token", action: "delete", project_id: @project_id, provider: provider %>
+        <% else %>
+          <%= link_to 'Create', controller: "token", action: "view", project_id: @project_id, provider: provider %>
+        <% end %>
+      </td>
+
+
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
