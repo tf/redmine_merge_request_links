@@ -11,7 +11,7 @@ module RedmineMergeRequestLinks
 
       def verify_token(token, request, payload)
         parsedPayload = CGI::parse( CGI::unescape(payload) )
-        unless parsedPayload['secret'] == token
+        unless parsedPayload['secret'][0] == token
           return false
         end
         signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), token, payload)
