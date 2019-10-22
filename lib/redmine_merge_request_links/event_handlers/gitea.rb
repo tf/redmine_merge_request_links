@@ -10,11 +10,10 @@ module RedmineMergeRequestLinks
       end
 
       def verify_token(token, request, payload)
-        json = JSON.parse(payload)
-        unless json['secret'] == token
+        parsedPayload = CGI::parse( CGI::unescape(payload) )
+        unless parsedPayload['secret'] == token
           return false
         end
-        return true # todo: remove
         signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), token, payload)
         Rack::Utils.secure_compare(signature, request.headers['X-Gitea-Signature'])
       end

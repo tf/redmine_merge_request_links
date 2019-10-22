@@ -18,7 +18,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
 
   def test_gitlab_merge_request_event_creates_merge_request
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
-    request.headers['X-Gitlab-Token'] = 'secret'
+    request.headers['X-Gitlab-Token'] = TOKEN
     post(:event,
          user: {
            username: 'john'
@@ -52,7 +52,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     )
 
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
-    request.headers['X-Gitlab-Token'] = 'secret'
+    request.headers['X-Gitlab-Token'] = TOKEN
     post(:event,
          user: {
            username: 'john'
@@ -89,7 +89,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     )
 
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
-    request.headers['X-Gitlab-Token'] = 'secret'
+    request.headers['X-Gitlab-Token'] = TOKEN
     post(:event,
          user: {
            username: 'john'
@@ -112,7 +112,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
 
   def test_gitlab_system_hooks
     request.headers['X-Gitlab-Event'] = 'System Hook'
-    request.headers['X-Gitlab-Token'] = 'secret'
+    request.headers['X-Gitlab-Token'] = TOKEN
     post(:event,
          event_type: 'merge_request',
          user: {
@@ -162,7 +162,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     issue = Issue.first
 
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
-    request.headers['X-Gitlab-Token'] = 'secret'
+    request.headers['X-Gitlab-Token'] = TOKEN
     post(:event,
          user: {
            username: 'john'
@@ -186,7 +186,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     issue = Issue.first
 
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
-    request.headers['X-Gitlab-Token'] = 'secret'
+    request.headers['X-Gitlab-Token'] = TOKEN
     post(:event,
          user: {
            username: 'john'
@@ -353,7 +353,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     url = 'https://gitea.com/Codertocat/Hello-World/pull/1'
 
     payload = {
-      secret: 'secret',
+      secret: TOKEN,
       pull_request: {
         html_url: url,
         title: 'Some pull request',
@@ -388,25 +388,28 @@ class MergeRequestsControllerTest < ActionController::TestCase
   end
 
   def test_responds_with_forbidden_if_gitea_signature_is_incorrect
+    payload = {
+      secret: TOKEN,
+      pull_request: {
+        html_url: 'https://gitea.com/Codertocat/Hello-World/pull/1',
+        title: 'Some pull request',
+        state: 'closed',
+        number: 12,
+        user: {
+          login: 'someuser'
+        },
+        base: {
+          repo: {
+            full_name: 'group/project'
+          }
+        }
+      }
+    }
     request.headers['X-Gitea-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = 'wrong'
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gogs-Signature'] = 'wrong'
-    post(:event, pull_request: {
-           secret: 'secret',
-           html_url: 'https://gitea.com/Codertocat/Hello-World/pull/1',
-           title: 'Some pull request',
-           state: 'closed',
-           number: 12,
-           user: {
-             login: 'someuser'
-           },
-           base: {
-             repo: {
-               full_name: 'group/project'
-             }
-           }
-         })
+    post(:event, payload)
 
     assert_response :forbidden
   end
@@ -416,7 +419,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     issue = Issue.last
 
     payload = {
-      secret: 'secret',
+      secret: TOKEN,
       pull_request: {
         html_url: url,
         title: 'Some pull request',
@@ -448,7 +451,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     issue = Issue.last
 
     payload = {
-      secret: 'secret',
+      secret: TOKEN,
       pull_request: {
         html_url: url,
         title: "Some pull request (##{issue.id})",
@@ -479,7 +482,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     url = 'https://gitea.com/Codertocat/Hello-World/pull/1'
 
     payload = {
-      secret: 'secret',
+      secret: TOKEN,
       pull_request: {
         html_url: url,
         title: 'Some pull request',

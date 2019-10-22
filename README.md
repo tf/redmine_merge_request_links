@@ -152,12 +152,14 @@ to run the test suite inside a Docker container.
 
 ### Adding new providers
 
-If you want to make the following changes:
+If you want to add a new provider please add the following components tailored to the provider:
  
-* lib/redmine_merge_request_links/event_handlers/<provider_name>.rb: Verify request should be processed by event handler and that request and token is valid
-* lib/redmine_merge_request_links.rb: Add new provider (environment variable, class instantiation)
+* lib/redmine_merge_request_links/event_handlers/<provider_name>.rb: Verify that request should be processed by event handler. Verify that request and token is valid
+* lib/redmine_merge_request_links.rb: Register new provider by adding a new environment variable and instantiate the class
 * assets/images/: Add logo (preferably SVG file) for new provider
 * assets/stylesheets/redmine_merge_request_links.css: Add new CSS class for logo
+
+Feel free to look at the existing providers as a reference of implementation.
 
 ## License
 
