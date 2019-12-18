@@ -1,0 +1,13 @@
+diff --git a/plugins/easyproject/easy_plugins/easy_extensions/app/views/issues/show.html.erb b/plugins/easyproject/easy_plugins/easy_extensions/app/views/issues/show.html.erb
+index 256a55b..5f43c4c 100644
+--- a/plugins/easyproject/easy_plugins/easy_extensions/app/views/issues/show.html.erb
++++ b/plugins/easyproject/easy_plugins/easy_extensions/app/views/issues/show.html.erb
+@@ -199,7 +199,7 @@
+       </div>
+     <% end %>
+   </div>
+-
++  <%= call_hook(:view_issues_show_after_details, :issue => @issue) %>
+   <%= call_hook(:view_issues_show_journals_top, :issue => @issue, :project => @project) %>
+
+   <%= render partial: 'common/entity_tabs', locals: {tabs: easy_issue_tabs(@issue), tabs_container: 'issue-detail'} %>
