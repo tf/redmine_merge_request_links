@@ -33,10 +33,19 @@ applying a patch to your Redmine instance. From your Redmine path run:
 $ git apply plugins/redmine_merge_request_links/patches/view_hook_issues_show_after_details_redmine_3.4.patch
 ```
 
+or if you use EasyRedmine
+```bash
+$ git apply plugins/redmine_merge_request_links/patches/view_hook_issues_show_after_details_easyredmine.patch
+```
+
 One of the following environment variables need to be set:
 
 * `REDMINE_MERGE_REQUEST_LINKS_GITLAB_WEBHOOK_TOKEN`
 * `REDMINE_MERGE_REQUEST_LINKS_GITHUB_WEBHOOK_TOKEN`
+
+If you use systemd set appropriate environment variable:
+
+`https://serverfault.com/a/413408`
 
 They must contain secrets which have to be configured in GitLab/GitHub to
 authenticate webhooks.
