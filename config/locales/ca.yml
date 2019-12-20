@@ -1,0 +1,5 @@
+ca:
+  project_module_merge_request_links: Enllaços merge requests
+  permission_view_associated_merge_requests: Veure merge requests associats
+  mrl_label_associated_merge_requests: Merge Requests associat
+  mrl_label_by: per
