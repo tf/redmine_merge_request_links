@@ -1,0 +1,5 @@
+es:
+  project_module_merge_request_links: Enlaces merge requests
+  permission_view_associated_merge_requests: Ver merge requests associados
+  mrl_label_associated_merge_requests: Merge Requests associado
+  mrl_label_by: por
