@@ -7,9 +7,7 @@
                   class: 'merge-request-id') %>
   <%= link_to(merge_request.title, merge_request.url) %>
   <span class="merge-request-by-line">
-    <%= l(:mrl_label_by) %>
-    <%= content_tag(:span,
-                    merge_request.author_name,
-                    class: 'merge-request-author') %>
+     <%= l(:label_added_time_by, author: merge_request.author_name, age: time_tag(merge_request.created_at)).html_safe %>,
+     <%= l(:label_updated_time, time_tag(merge_request.updated_at)).html_safe %>
   </span>
 <% end %>

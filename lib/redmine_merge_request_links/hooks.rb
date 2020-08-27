@@ -5,7 +5,6 @@ module RedmineMergeRequestLinks
                           plugin: 'redmine_merge_request_links')
     end
 
-    render_on(:view_issues_show_after_details,
-              partial: 'merge_request_links/box')
+    render_on(:view_issues_show_description_bottom, partial: 'merge_request_links/box')
   end
 end
