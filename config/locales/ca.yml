@@ -3,3 +3,4 @@ ca:
   permission_view_associated_merge_requests: Veure merge requests associats
   mrl_label_associated_merge_requests: Merge Requests associat
   mrl_label_by: per
+  field_merge_request: Merge request
