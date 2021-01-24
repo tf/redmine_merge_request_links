@@ -1,4 +1,5 @@
 require 'redmine_merge_request_links/hooks'
+require 'redmine_merge_request_links/patches/issue_patch'
 require 'redmine_merge_request_links/patches/issue_query_patch'
 
 module RedmineMergeRequestLinks
