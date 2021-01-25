@@ -35,6 +35,10 @@ div#issue-merge-requests {
   background-image: url("/plugin_assets/redmine_merge_request_links/images/gitlab.svg");
 }
 
+.merge-request-gitea {
+  background-image: url("/plugin_assets/redmine_merge_request_links/images/gitea.svg");
+}
+
 .merge-request:last-child {
   border-bottom: solid 1px #ddd;
 }
