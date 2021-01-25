@@ -7,7 +7,11 @@ module RedmineMergeRequestLinks
         end
       end
       def merge_requests_list
-        ApplicationController.render(partial: 'merge_request_links/column', locals: { merge_requests: merge_requests })
+        if Rails::VERSION::MAJOR >= 5
+          ApplicationController.render(partial: 'merge_request_links/column', locals: { merge_requests: merge_requests })
+        else
+          ActionController::Base.new.render_to_string(partial: 'merge_request_links/column', locals: { merge_requests: merge_requests })
+        end
       end
     end
   end
