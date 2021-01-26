@@ -1,6 +1,6 @@
 # Redmine Merge Request Links
 
-[![Build Status](https://travis-ci.org/tf/redmine_merge_request_links.svg?branch=master)](https://travis-ci.org/tf/redmine_merge_request_links)
+[![Tests](https://github.com/tf/redmine_merge_request_links/workflows/tests/badge.svg)](https://github.com/tf/redmine_merge_request_links/actions)
 
 Display links to associated merge requests and pull requests on Redmine's issue page.
 

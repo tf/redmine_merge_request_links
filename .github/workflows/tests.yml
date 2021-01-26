@@ -1,0 +1,25 @@
+name: tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        redmine-version:
+          - '3.4'
+          - '4.0'
+
+    env:
+      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build image
+        run: bin/build --build-arg REDMINE_VERSION=$REDMINE_VERSION --build-arg PATCH_VERSION=$REDMINE_VERSION
+        env:
+          REDMINE_VERSION: ${{ matrix.redmine-version }}
+      - name: Run tests
+        run: bin/test
