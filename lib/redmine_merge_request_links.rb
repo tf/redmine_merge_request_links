@@ -1,6 +1,7 @@
 require 'redmine_merge_request_links/hooks'
 require 'redmine_merge_request_links/patches/issue_patch'
 require 'redmine_merge_request_links/patches/issue_query_patch'
+require 'redmine_merge_request_links/patches/queries_helper_patch'
 
 module RedmineMergeRequestLinks
   github_token = ENV['REDMINE_MERGE_REQUEST_LINKS_GITHUB_WEBHOOK_TOKEN']

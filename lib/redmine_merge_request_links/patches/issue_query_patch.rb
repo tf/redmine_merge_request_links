@@ -25,7 +25,7 @@ module RedmineMergeRequestLinks
           unloadable
           alias_method :initialize_available_filters_without_merge_requests, :initialize_available_filters
           alias_method :initialize_available_filters, :initialize_available_filters_with_merge_requests
-          self.available_columns << QueryColumn.new(:merge_requests_list)
+          self.available_columns << QueryColumn.new(:merge_requests)
         end
 
       end

@@ -4,4 +4,4 @@ ca:
   mrl_label_associated_merge_requests: Merge Requests associat
   mrl_label_by: per
   field_merge_request: Merge request
-  field_merge_requests_list: Merge requests
+  field_merge_requests: Merge requests

@@ -81,10 +81,10 @@ div#issue-merge-requests {
   color: #444;
 }
 
-table.list td.merge_requests_list {
+table.list td.merge_requests {
   text-align: left;
 }
 
-table.list td.merge_requests_list .merge-request-state {
+table.list td.merge_requests .merge-request-state {
   float: none;
 }
