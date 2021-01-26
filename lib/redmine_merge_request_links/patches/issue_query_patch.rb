@@ -3,8 +3,8 @@ module RedmineMergeRequestLinks
     module IssueQueryPatch
       def self.included(base)
 
-        def initialize_available_filters_with_more_filters
-          initialize_available_filters_without_more_filters
+        def initialize_available_filters_with_merge_requests
+          initialize_available_filters_without_merge_requests
           add_available_filter("merge_request",
             :type => :list_optional, :values => ['open', 'merged', 'closed']
           )
@@ -23,8 +23,8 @@ module RedmineMergeRequestLinks
 
         base.class_eval do
           unloadable
-          alias_method :initialize_available_filters_without_more_filters, :initialize_available_filters
-          alias_method :initialize_available_filters, :initialize_available_filters_with_more_filters
+          alias_method :initialize_available_filters_without_merge_requests, :initialize_available_filters
+          alias_method :initialize_available_filters, :initialize_available_filters_with_merge_requests
           self.available_columns << QueryColumn.new(:merge_requests_list)
         end
 
