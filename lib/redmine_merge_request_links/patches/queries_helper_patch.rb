@@ -5,7 +5,11 @@ module RedmineMergeRequestLinks
 
         def column_value_with_merge_requests(column, item, value)
           if column.name == :merge_requests
-            render :partial => 'merge_request_links/column', :locals => { :merge_requests => value }
+            if User.current.allowed_to?(:view_associated_merge_requests, item.project)
+              render :partial => 'merge_request_links/column', :locals => { :merge_requests => value }
+            else
+              ''
+            end
           else
             column_value_without_merge_requests(column, item, value)
           end
