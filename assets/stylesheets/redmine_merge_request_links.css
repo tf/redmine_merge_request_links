@@ -85,6 +85,20 @@ table.list td.merge_requests {
   text-align: left;
 }
 
-table.list td.merge_requests .merge-request-state {
-  float: none;
+td.merge_requests .icon {
+  background-size: auto 13px;
+  padding-left: 14px;
+}
+
+td.merge_requests .icon-merge-request-open {
+  background-image: url("/plugin_assets/redmine_merge_request_links/images/state-open.svg");
+}
+
+td.merge_requests .icon-merge-request-closed {
+  background-image: url("/plugin_assets/redmine_merge_request_links/images/state-closed.svg");
+  padding-left: 12px;
+}
+
+td.merge_requests .icon-merge-request-merged {
+  background-image: url("/plugin_assets/redmine_merge_request_links/images/state-merged.svg");
 }
