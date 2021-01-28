@@ -10,6 +10,13 @@ module RedmineMergeRequestLinks
           )
         end
 
+        def issues_with_merge_requests(options={})
+          if has_column?(:merge_requests)
+            (options[:include] ||= []) << :merge_requests
+          end
+          issues_without_merge_requests(options)
+        end
+
         def sql_for_merge_request_field(field, operator, value, options={})
           case operator
           when "*", "!*"
@@ -26,6 +33,8 @@ module RedmineMergeRequestLinks
           alias_method :initialize_available_filters_without_merge_requests, :initialize_available_filters
           alias_method :initialize_available_filters, :initialize_available_filters_with_merge_requests
           self.available_columns << QueryColumn.new(:merge_requests)
+          alias_method :issues_without_merge_requests, :issues
+          alias_method :issues, :issues_with_merge_requests
         end
 
       end
