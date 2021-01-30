@@ -1,6 +1,6 @@
 require File.expand_path('../../test_helper', __FILE__)
 
-class IssuesControllerTest < ActionController::TestCase
+class IssuesControllerTest < Redmine::ControllerTest
   include RedmineMergeRequestLinks::RequestTestHelperCompat
 
   fixtures :projects,
@@ -38,7 +38,7 @@ class IssuesControllerTest < ActionController::TestCase
     assert_select "#merge-request-#{merge_request.id}"
   end
 
-  def test_requires_merge_request_links_mobile_to_be_enabled
+  def test_requires_merge_request_links_module_to_be_enabled
     issue.project.enabled_module_names -= ['merge_request_links']
     merge_request = MergeRequest.create!(title: 'Some merge request')
     merge_request.issues << issue
@@ -59,6 +59,154 @@ class IssuesControllerTest < ActionController::TestCase
 
     assert_response :success
     assert_select "#merge-request-#{merge_request.id}", count: 0
+  end
+
+  def test_merge_request_filter_any
+    merge_request = MergeRequest.create!(title: 'Some merge request', state: 'open')
+    merge_request.issues << issue
+
+    sign_in(user_with_permission)
+    get(
+      :index,
+      :params => {
+        :project_id => issue.project_id,
+        :set_filter => 1,
+        :f => ['merge_request'],
+        :op => {
+          'merge_request' => '*'
+        }
+      }
+    )
+
+    assert_response :success
+    assert_equal [issue], issues_in_list
+  end
+
+  def test_merge_request_filter_none
+    merge_request = MergeRequest.create!(title: 'Some merge request', state: 'open')
+    merge_request.issues << issue
+
+    sign_in(user_with_permission)
+    get(
+      :index,
+      :params => {
+        :project_id => issue.project_id,
+        :set_filter => 1,
+        :f => ['merge_request'],
+        :op => {
+          'merge_request' => '!*'
+        }
+      }
+    )
+
+    assert_response :success
+    assert_not_includes issues_in_list, issue
+  end
+
+  def test_merge_request_filter_open
+    merge_request = MergeRequest.create!(title: 'Some merge request', state: 'open')
+    merge_request.issues << issue
+
+    sign_in(user_with_permission)
+    get(
+      :index,
+      :params => {
+        :project_id => issue.project_id,
+        :set_filter => 1,
+        :f => ['merge_request'],
+        :op => {
+          'merge_request' => '='
+        },
+        :v => {
+          'merge_request' => ['open']
+        }
+      }
+    )
+
+    assert_response :success
+    assert_equal [issue], issues_in_list
+  end
+
+  def test_merge_request_filter_merged
+    merge_request = MergeRequest.create!(title: 'Some merge request', state: 'open')
+    merge_request.issues << issue
+
+    sign_in(user_with_permission)
+    get(
+      :index,
+      :params => {
+        :project_id => issue.project_id,
+        :set_filter => 1,
+        :f => ['merge_request'],
+        :op => {
+          'merge_request' => '='
+        },
+        :v => {
+          'merge_request' => ['merged']
+        }
+      }
+    )
+
+    assert_response :success
+    assert_not_includes issues_in_list, issue
+  end
+
+  def test_merge_requests_column
+    merge_request = MergeRequest.create!(title: 'Some merge request', state: 'open', display_id: 'mr_id')
+    merge_request.issues << issue
+
+    sign_in(user_with_permission)
+    get(
+      :index,
+      :params => {
+        :project_id => issue.project_id,
+        :set_filter => 1,
+        :f => ['merge_request'],
+        :op => {
+          'merge_request' => '*'
+        },
+        :c => ['merge_requests']
+      }
+    )
+
+    assert_response :success
+    assert_includes columns_in_issues_list, "Merge requests"
+    assert_match "mr_id", css_select("td.merge_requests").first.text
+  end
+
+  def test_merge_request_filter_no_permission
+    merge_request = MergeRequest.create!(title: 'Some merge request', state: 'open')
+    merge_request.issues << issue
+
+    sign_in(user_without_permission)
+    get(
+      :index,
+      :params => {
+        :project_id => issue.project_id,
+        :set_filter => 1,
+        :f => ['merge_request'],
+        :op => {
+          'merge_request' => '*'
+        }
+      }
+    )
+
+    assert_response :success
+    assert issues_in_list.length > 1
+  end
+
+  def test_merge_requests_column_no_permission
+    sign_in(user_without_permission)
+    get(
+      :index,
+      :params => {
+        :project_id => issue.project_id,
+        :c => ['merge_requests']
+      }
+    )
+
+    assert_response :success
+    assert_not_includes columns_in_issues_list, "Merge requests"
   end
 
   private
