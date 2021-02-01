@@ -33,16 +33,14 @@ module RedmineMergeRequestLinks
           case operator
           when "*", "!*"
             "#{(operator == "*" ? "EXISTS" : "NOT EXISTS")} (SELECT 1 FROM #{issues_merge_requests}" +
-              " LEFT OUTER JOIN #{Project.table_name} ON #{Project.table_name}.id = #{Issue.table_name}.project_id" +
               " WHERE #{issues_merge_requests}.issue_id = #{Issue.table_name}.id" +
-              " AND " + Project.allowed_to_condition(User.current, :view_associated_merge_requests) + ")"
+              ") AND " + Project.allowed_to_condition(User.current, :view_associated_merge_requests)
           when "=", "!"
             "EXISTS (SELECT 1 FROM #{issues_merge_requests}" +
               " JOIN #{MergeRequest.table_name} ON #{MergeRequest.table_name}.id = #{issues_merge_requests}.merge_request_id" +
-              " LEFT OUTER JOIN #{Project.table_name} ON #{Project.table_name}.id = #{Issue.table_name}.project_id" +
               " WHERE #{issues_merge_requests}.issue_id = #{Issue.table_name}.id" +
               " AND #{MergeRequest.table_name}.state #{(operator == "=" ? "IN" : "NOT IN")} (" + value.collect{|val| "'#{self.class.connection.quote_string(val)}'"}.join(",") + ")" +
-              " AND " + Project.allowed_to_condition(User.current, :view_associated_merge_requests) + ")"
+              ") AND " + Project.allowed_to_condition(User.current, :view_associated_merge_requests)
           end
         end
 
