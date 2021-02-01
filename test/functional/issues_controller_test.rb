@@ -1,7 +1,6 @@
 require File.expand_path('../../test_helper', __FILE__)
 
 class IssuesControllerTest < Redmine::ControllerTest
-  include RedmineMergeRequestLinks::RequestTestHelperCompat
 
   fixtures :projects,
            :users,
@@ -32,7 +31,12 @@ class IssuesControllerTest < Redmine::ControllerTest
     merge_request.issues << issue
 
     sign_in(user_with_permission)
-    get(:show, id: issue.id)
+    get(
+      :show, 
+      :params => {
+        id: issue.id
+      }
+    )
 
     assert_response :success
     assert_select "#merge-request-#{merge_request.id}"
@@ -44,7 +48,12 @@ class IssuesControllerTest < Redmine::ControllerTest
     merge_request.issues << issue
 
     sign_in(user_with_permission)
-    get(:show, id: issue.id)
+    get(
+      :show, 
+      :params => {
+        id: issue.id
+      }
+    )
 
     assert_response :success
     assert_select "#merge-request-#{merge_request.id}", count: 0
@@ -55,7 +64,12 @@ class IssuesControllerTest < Redmine::ControllerTest
     merge_request.issues << issue
 
     sign_in(user_without_permission)
-    get(:show, id: issue.id)
+    get(
+      :show, 
+      :params => {
+        id: issue.id
+      }
+    )
 
     assert_response :success
     assert_select "#merge-request-#{merge_request.id}", count: 0

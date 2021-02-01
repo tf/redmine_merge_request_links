@@ -1,7 +1,6 @@
 require File.expand_path('../../test_helper', __FILE__)
 
-class MergeRequestsControllerTest < ActionController::TestCase
-  include RedmineMergeRequestLinks::RequestTestHelperCompat
+class MergeRequestsControllerTest < Redmine::ControllerTest
 
   TOKEN = 'secret'
   MERGE_REQUEST_URL = 'https://gitlab.example.com/project/merge_requests/1'
@@ -20,16 +19,18 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         user: {
-           username: 'john'
-         },
-         object_attributes: {
-           url: MERGE_REQUEST_URL,
-           title: 'Some merge request',
-           state: 'opened',
-           iid: 23,
-           target: {
-             path_with_namespace: 'group/project'
+         :params => {
+           user: {
+             username: 'john'
+           },
+           object_attributes: {
+             url: MERGE_REQUEST_URL,
+             title: 'Some merge request',
+             state: 'opened',
+             iid: 23,
+             target: {
+               path_with_namespace: 'group/project'
+             }
            }
          })
 
@@ -54,16 +55,18 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         user: {
-           username: 'john'
-         },
-         object_attributes: {
-           url: MERGE_REQUEST_URL,
-           title: 'New title',
-           state: 'merged',
-           iid: 23,
-           target: {
-             path_with_namespace: 'group/project'
+         :params => {
+           user: {
+             username: 'john'
+           },
+           object_attributes: {
+             url: MERGE_REQUEST_URL,
+             title: 'New title',
+             state: 'merged',
+             iid: 23,
+             target: {
+               path_with_namespace: 'group/project'
+             }
            }
          })
 
@@ -91,16 +94,18 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         user: {
-           username: 'john'
-         },
-         object_attributes: {
-           url: MERGE_REQUEST_URL,
-           title: 'Title',
-           state: 'merged',
-           iid: 23,
-           target: {
-             path_with_namespace: 'group/project'
+         :params => {
+           user: {
+             username: 'john'
+           },
+           object_attributes: {
+             url: MERGE_REQUEST_URL,
+             title: 'Title',
+             state: 'merged',
+             iid: 23,
+             target: {
+               path_with_namespace: 'group/project'
+             }
            }
          })
 
@@ -114,17 +119,19 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitlab-Event'] = 'System Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         event_type: 'merge_request',
-         user: {
-           username: 'john'
-         },
-         object_attributes: {
-           url: MERGE_REQUEST_URL,
-           title: 'Some merge request',
-           state: 'opened',
-           iid: 23,
-           target: {
-             path_with_namespace: 'group/project'
+         :params => {
+           event_type: 'merge_request',
+           user: {
+             username: 'john'
+           },
+           object_attributes: {
+             url: MERGE_REQUEST_URL,
+             title: 'Some merge request',
+             state: 'opened',
+             iid: 23,
+             target: {
+               path_with_namespace: 'group/project'
+             }
            }
          })
 
@@ -142,16 +149,18 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'wrong'
     post(:event,
-         user: {
-           username: 'john'
-         },
-         object_attributes: {
-           url: MERGE_REQUEST_URL,
-           title: 'Some merge request',
-           state: 'opened',
-           iid: 23,
-           target: {
-             path_with_namespace: 'group/project'
+         :params => {
+           user: {
+             username: 'john'
+           },
+           object_attributes: {
+             url: MERGE_REQUEST_URL,
+             title: 'Some merge request',
+             state: 'opened',
+             iid: 23,
+             target: {
+               path_with_namespace: 'group/project'
+             }
            }
          })
 
@@ -164,17 +173,19 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         user: {
-           username: 'john'
-         },
-         object_attributes: {
-           url: MERGE_REQUEST_URL,
-           title: 'Some merge request',
-           state: 'opened',
-           description: "This mentions ##{issue.id}",
-           iid: 23,
-           target: {
-             path_with_namespace: 'group/project'
+         :params => {
+           user: {
+             username: 'john'
+           },
+           object_attributes: {
+             url: MERGE_REQUEST_URL,
+             title: 'Some merge request',
+             state: 'opened',
+             description: "This mentions ##{issue.id}",
+             iid: 23,
+             target: {
+               path_with_namespace: 'group/project'
+             }
            }
          })
 
@@ -188,17 +199,19 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         user: {
-           username: 'john'
-         },
-         object_attributes: {
-           url: MERGE_REQUEST_URL,
-           title: "Some merge request (##{issue.id})",
-           state: 'opened',
-           description: 'Some text',
-           iid: 23,
-           target: {
-             path_with_namespace: 'group/project'
+         :params => {
+           user: {
+             username: 'john'
+           },
+           object_attributes: {
+             url: MERGE_REQUEST_URL,
+             title: "Some merge request (##{issue.id})",
+             state: 'opened',
+             description: 'Some text',
+             iid: 23,
+             target: {
+               path_with_namespace: 'group/project'
+             }
            }
          })
 
@@ -227,7 +240,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     }
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Hub-Signature'] = hub_signature(payload)
-    post(:event, payload)
+    post(:event, :params => payload)
 
     assert_response :success
 
@@ -243,17 +256,20 @@ class MergeRequestsControllerTest < ActionController::TestCase
   def test_responds_with_forbidden_if_github_signature_is_incorrect
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Hub-Signature'] = 'wrong'
-    post(:event, pull_request: {
-           html_url: 'https://github.com/Codertocat/Hello-World/pull/1',
-           title: 'Some pull request',
-           state: 'closed',
-           number: 12,
-           user: {
-             login: 'someuser'
-           },
-           base: {
-             repo: {
-               full_name: 'group/project'
+    post(:event,
+         :params => {
+           pull_request: {
+             html_url: 'https://github.com/Codertocat/Hello-World/pull/1',
+             title: 'Some pull request',
+             state: 'closed',
+             number: 12,
+             user: {
+               login: 'someuser'
+             },
+             base: {
+               repo: {
+                 full_name: 'group/project'
+               }
              }
            }
          })
@@ -284,7 +300,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     }
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Hub-Signature'] = hub_signature(payload)
-    post(:event, payload)
+    post(:event, :params => payload)
 
     merge_request = MergeRequest.where(url: url).first
     assert_includes(merge_request.issues, issue)
@@ -313,7 +329,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     }
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Hub-Signature'] = hub_signature(payload)
-    post(:event, payload)
+    post(:event, :params => payload)
 
     merge_request = MergeRequest.where(url: url).first
     assert_includes(merge_request.issues, issue)
@@ -341,7 +357,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     }
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Hub-Signature'] = hub_signature(payload)
-    post(:event, payload)
+    post(:event, :params => payload)
 
     assert_response :success
 
@@ -374,7 +390,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)
 
-    post(:event, payload)
+    post(:event, :params => payload)
 
     assert_response :success
 
@@ -392,17 +408,20 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gitea-Signature'] = 'wrong'
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gogs-Signature'] = 'wrong'
-    post(:event, pull_request: {
-           html_url: 'https://gitea.com/Codertocat/Hello-World/pull/1',
-           title: 'Some pull request',
-           state: 'closed',
-           number: 12,
-           user: {
-             login: 'someuser'
-           },
-           base: {
-             repo: {
-               full_name: 'group/project'
+    post(:event,
+         :params => {
+           pull_request: {
+             html_url: 'https://gitea.com/Codertocat/Hello-World/pull/1',
+             title: 'Some pull request',
+             state: 'closed',
+             number: 12,
+             user: {
+               login: 'someuser'
+             },
+             base: {
+               repo: {
+                 full_name: 'group/project'
+               }
              }
            }
          })
@@ -436,7 +455,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)
-    post(:event, payload)
+    post(:event, :params => payload)
 
     merge_request = MergeRequest.where(url: url).first
     assert_includes(merge_request.issues, issue)
@@ -468,7 +487,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)
-    post(:event, payload)
+    post(:event, :params => payload)
 
     merge_request = MergeRequest.where(url: url).first
     assert_includes(merge_request.issues, issue)
@@ -499,7 +518,7 @@ class MergeRequestsControllerTest < ActionController::TestCase
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)
-    post(:event, payload)
+    post(:event, :params => payload)
 
     assert_response :success
 
