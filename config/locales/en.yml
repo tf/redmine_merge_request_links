@@ -3,3 +3,5 @@ en:
   permission_view_associated_merge_requests: View associated merge requests
   mrl_label_associated_merge_requests: Associated Merge Requests
   mrl_label_by: by
+  field_merge_request: Merge request
+  field_merge_requests: Merge requests

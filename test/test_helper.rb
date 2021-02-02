@@ -12,22 +12,3 @@ $VERBOSE = false
 require File.expand_path(File.dirname(__FILE__) + '/../../../test/test_helper')
 
 Rails.logger.level = :warn
-
-module RedmineMergeRequestLinks
-  module RequestTestHelperCompat
-    def get(action, parameters = {})
-      super(action, compatible_request_options(parameters))
-    end
-
-    def post(action, parameters = {})
-      super(action, compatible_request_options(parameters))
-    end
-
-    private
-
-    def compatible_request_options(parameters)
-      return parameters if Rails.version < '5.0'
-      { params: parameters }
-    end
-  end
-end

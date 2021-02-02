@@ -1,0 +1,8 @@
+<% merge_requests.each do |merge_request| %>
+  <%= link_to(merge_request.display_id, merge_request.url, title: merge_request.title) %>
+  <%= content_tag(:span, merge_request.state.first,
+                  title: merge_request.state,
+                  class: "merge-request-state merge-request-state-#{merge_request.state}") +
+      (', ' unless merge_request == merge_requests.last)
+  %>
+<% end %>

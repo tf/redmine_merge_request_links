@@ -80,3 +80,14 @@ div#issue-merge-requests {
 .merge-request-author {
   color: #444;
 }
+
+table.list td.merge_requests {
+  text-align: left;
+}
+
+td.merge_requests .merge-request-state {
+  float: none;
+  width: 1.4em;
+  padding: 2px 0;
+  text-align: center;
+}
