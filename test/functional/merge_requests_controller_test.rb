@@ -19,7 +19,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         :params => {
+         params: {
            user: {
              username: 'john'
            },
@@ -55,7 +55,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         :params => {
+         params: {
            user: {
              username: 'john'
            },
@@ -94,7 +94,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         :params => {
+         params: {
            user: {
              username: 'john'
            },
@@ -119,7 +119,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gitlab-Event'] = 'System Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         :params => {
+         params: {
            event_type: 'merge_request',
            user: {
              username: 'john'
@@ -149,7 +149,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'wrong'
     post(:event,
-         :params => {
+         params: {
            user: {
              username: 'john'
            },
@@ -173,7 +173,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         :params => {
+         params: {
            user: {
              username: 'john'
            },
@@ -199,7 +199,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gitlab-Event'] = 'Merge Request Hook'
     request.headers['X-Gitlab-Token'] = 'secret'
     post(:event,
-         :params => {
+         params: {
            user: {
              username: 'john'
            },
@@ -240,7 +240,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     }
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Hub-Signature'] = hub_signature(payload)
-    post(:event, :params => payload)
+    post(:event, params: payload)
 
     assert_response :success
 
@@ -257,7 +257,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Hub-Signature'] = 'wrong'
     post(:event,
-         :params => {
+         params: {
            pull_request: {
              html_url: 'https://github.com/Codertocat/Hello-World/pull/1',
              title: 'Some pull request',
@@ -300,7 +300,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     }
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Hub-Signature'] = hub_signature(payload)
-    post(:event, :params => payload)
+    post(:event, params: payload)
 
     merge_request = MergeRequest.where(url: url).first
     assert_includes(merge_request.issues, issue)
@@ -329,7 +329,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     }
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Hub-Signature'] = hub_signature(payload)
-    post(:event, :params => payload)
+    post(:event, params: payload)
 
     merge_request = MergeRequest.where(url: url).first
     assert_includes(merge_request.issues, issue)
@@ -357,7 +357,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     }
     request.headers['X-GitHub-Event'] = 'pull_request'
     request.headers['X-Hub-Signature'] = hub_signature(payload)
-    post(:event, :params => payload)
+    post(:event, params: payload)
 
     assert_response :success
 
@@ -390,7 +390,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)
 
-    post(:event, :params => payload)
+    post(:event, params: payload)
 
     assert_response :success
 
@@ -409,7 +409,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gogs-Signature'] = 'wrong'
     post(:event,
-         :params => {
+         params: {
            pull_request: {
              html_url: 'https://gitea.com/Codertocat/Hello-World/pull/1',
              title: 'Some pull request',
@@ -455,7 +455,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)
-    post(:event, :params => payload)
+    post(:event, params: payload)
 
     merge_request = MergeRequest.where(url: url).first
     assert_includes(merge_request.issues, issue)
@@ -487,7 +487,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)
-    post(:event, :params => payload)
+    post(:event, params: payload)
 
     merge_request = MergeRequest.where(url: url).first
     assert_includes(merge_request.issues, issue)
@@ -518,7 +518,7 @@ class MergeRequestsControllerTest < Redmine::ControllerTest
     request.headers['X-Gogs-Event'] = 'pull_request'
     request.headers['X-Gitea-Signature'] = gitea_signature(payload)
     request.headers['X-Gogs-Signature'] = gitea_signature(payload)
-    post(:event, :params => payload)
+    post(:event, params: payload)
 
     assert_response :success
 

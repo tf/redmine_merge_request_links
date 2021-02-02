@@ -32,8 +32,8 @@ class IssuesControllerTest < Redmine::ControllerTest
 
     sign_in(user_with_permission)
     get(
-      :show, 
-      :params => {
+      :show,
+      params: {
         id: issue.id
       }
     )
@@ -50,7 +50,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     sign_in(user_with_permission)
     get(
       :show, 
-      :params => {
+      params: {
         id: issue.id
       }
     )
@@ -66,7 +66,7 @@ class IssuesControllerTest < Redmine::ControllerTest
     sign_in(user_without_permission)
     get(
       :show, 
-      :params => {
+      params: {
         id: issue.id
       }
     )
