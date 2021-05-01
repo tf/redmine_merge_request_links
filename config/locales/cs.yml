@@ -1,0 +1,7 @@
+cs:
+  project_module_merge_request_links: Merge request odkazy
+  permission_view_associated_merge_requests: Prohlížení přidružených merge requestů
+  mrl_label_associated_merge_requests: Přidružené Merge Requesty
+  mrl_label_by: od
+  field_merge_request: Merge request
+  field_merge_requests: Merge requesty
