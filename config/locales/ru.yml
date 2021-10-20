@@ -1,0 +1,7 @@
+en:
+  project_module_merge_request_links: Ссылки на MR
+  permission_view_associated_merge_requests: Посмотреть привязанные MR
+  mrl_label_associated_merge_requests: Привязанные MR
+  mrl_label_by: создан
+  field_merge_request: Запрос (MR)
+  field_merge_requests: Список запросов (MR)
