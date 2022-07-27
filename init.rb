@@ -15,4 +15,4 @@ Redmine::Plugin.register :redmine_merge_request_links do
   end
 end
 
-require 'redmine_merge_request_links'
+require_relative 'lib/redmine_merge_request_links'
