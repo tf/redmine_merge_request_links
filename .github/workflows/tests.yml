@@ -11,6 +11,7 @@ jobs:
         redmine-version:
           - '3.4'
           - '4.0'
+          - '5.0'
 
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
