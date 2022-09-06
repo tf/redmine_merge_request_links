@@ -3,10 +3,7 @@ div#issue-changesets {
 }
 
 div#issue-merge-requests {
-  float: right;
-  width: 45%;
-  margin: 1em 0 2em 1em;
-  padding-left: 1em;
+  margin: 1em 0;
 }
 
 @media screen and (max-width: 899px) {
@@ -44,18 +41,15 @@ div#issue-merge-requests {
 }
 
 .merge-request-id {
-  display: block;
   color: #444;
 }
 
 .merge-request a {
-  display: block;
   font-weight: bold;
   margin: 4px 0;
 }
 
 .merge-request-state {
-  display: inline-block;
   background-color: #5aa51d;
   color: #fff;
   font-weight: bold;
@@ -73,7 +67,6 @@ div#issue-merge-requests {
 }
 
 .merge-request-by-line {
-  display: block;
   color: #888;
 }
 
