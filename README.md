@@ -50,6 +50,12 @@ If you use systemd set appropriate environment variable:
 They must contain secrets which have to be configured in GitLab/GitHub to
 authenticate webhooks.
 
+Optionally, you can also set the following variables:
+
+* `REDMINE_MERGE_REQUEST_LINKS_AFTER_MERGE_STATUS` - Name of issue status which should be set after the merge request is merged.
+* `REDMINE_MERGE_REQUEST_LINKS_REDMINE_USER_ID` - ID of Redmine user who should change the status - used as journal author.
+* `REDMINE_MERGE_REQUEST_LINKS_FIXING_KEYWORD_PATTERN` - Fixing keyword pattern. When set, the issue status is changed only when issue ID is preceeded with the fixing pattern. Example pattern: `(?:clos(?:e[sd]?|ing)|fix(?:e[sd]|ing)?|resolv(?:e[sd]?|ing))`
+
 Export the environment variable(s) in your bash or webserver config.
 Examples with Phusion Passenger webserver can be found here:
 https://www.phusionpassenger.com/library/indepth/environment_variables.html
